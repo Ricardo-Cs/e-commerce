@@ -8,13 +8,91 @@ datasource db {
 }
 
 model User {
-  id    Int    @id @default(autoincrement())
-  email String @unique
-  name  String
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  carts  Cart[]
+  orders Order[]
 }
 
 model Product {
-  id    Int     @id @default(autoincrement())
-  name  String
-  price Decimal @db.Decimal(10, 2)
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  stock       Int
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  categories ProductCategory[]
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+}
+
+model Category {
+  id       Int               @id @default(autoincrement())
+  name     String            @unique
+  products ProductCategory[]
+}
+
+model ProductCategory {
+  productId  Int
+  categoryId Int
+  product    Product  @relation(fields: [productId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@id([productId, categoryId])
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  userId    Int
+  user      User       @relation(fields: [userId], references: [id])
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  cartId    Int
+  productId Int
+  quantity  Int     @default(1)
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  status    String   @default("PENDING") // PENDING, PAID, SHIPPED
+  total     Float
+  createdAt DateTime @default(now())
+
+  items   OrderItem[]
+  payment Payment?
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int
+  price     Float
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Payment {
+  id        Int      @id @default(autoincrement())
+  orderId   Int      @unique
+  method    String // ex: CARD, PIX, PAYPAL
+  status    String   @default("PENDING") // PENDING, CONFIRMED, FAILED
+  order     Order    @relation(fields: [orderId], references: [id])
+  createdAt DateTime @default(now())
 }

@@ -1,12 +1,19 @@
-// import dotenv from 'dotenv';
-// dotenv.config();
+import { z } from "zod";
+import dotenv from "dotenv";
 
-// export const API_PORT = process.env.PORT || 3000;
+dotenv.config();
 
-// export const DB_CONFIG = {
-//     user: process.env.DB_USER!,
-//     host: process.env.DB_HOST!,
-//     database: process.env.DB_NAME!,
-//     password: process.env.DB_PASSWORD!,
-//     port: Number(process.env.DB_PORT || 5432),
-// };
+const envSchema = z.object({
+    DATABASE_URL: z.url(),
+    JWT_SECRET: z.string().min(20),
+    PORT: z.string().default("3000")
+});
+
+const parsed = envSchema.safeParse(process.env);
+
+if (!parsed.success) {
+    console.error("Erro nas variáveis de ambiente:", parsed.error.flatten().fieldErrors);
+    process.exit(1);
+}
+
+export const env = parsed.data;

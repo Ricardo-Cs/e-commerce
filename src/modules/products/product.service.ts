@@ -16,7 +16,7 @@ export class ProductService {
     }
 
     async create(input: unknown) {
-        const data = createProductSchema.parse(input);
+        const data = createProductSchema.parse(input) as Product;
         return repo.create(data);
     }
 

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { ProductController } from "./product.controller";
 import { authMiddleware } from "../../middlewares/auth";
+import { isAdmin } from "../../middlewares/isAdmin";
 
 const router = Router();
 const productController = new ProductController();
@@ -9,9 +10,9 @@ const productController = new ProductController();
 router.get("/", (req, res) => productController.getAll(req, res));
 router.get("/:id", (req, res) => productController.getById(req, res));
 
-// Rotas de admin (ex.: proteger com middleware de auth/admin)
-router.post("/", authMiddleware, (req, res) => productController.create(req, res));
-router.put("/:id", authMiddleware, (req, res) => productController.update(req, res));
-router.delete("/:id", authMiddleware, (req, res) => productController.delete(req, res));
+// Rotas de admin)
+router.post("/", authMiddleware, isAdmin, (req, res) => productController.create(req, res));
+router.put("/:id", authMiddleware, isAdmin, (req, res) => productController.update(req, res));
+router.delete("/:id", authMiddleware, isAdmin, (req, res) => productController.delete(req, res));
 
 export default router;

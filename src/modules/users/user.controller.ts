@@ -8,4 +8,9 @@ export class UserController {
         const user = await service.create(req.body);
         res.status(201).json(user);
     }
+
+    async getAll(req: Request, res: Response) {
+        const users = await service.getAll();
+        res.json(users);
+    }
 }

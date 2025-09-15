@@ -8,4 +8,8 @@ export class UserService {
         const data = createUserSchema.parse(input);
         return repo.create(data);
     }
+
+    async getAll() {
+        return repo.findAll();
+    }
 }

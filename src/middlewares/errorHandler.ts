@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
-import { ZodError, z } from "zod"; // Importa 'z' aqui
+import { ZodError, z } from "zod";
+import { AppError } from "../errors/AppError";
 
 export const errorHandler = (
     error: unknown,
@@ -15,12 +16,10 @@ export const errorHandler = (
         });
     }
 
-    if (error instanceof Error) {
-        if (error.message === "Email ou senha incorretos!") {
-            return res.status(401).json({ error: error.message });
-        }
-        return res.status(500).json({ error: "Erro interno do servidor" });
+    if (error instanceof AppError) {
+        return res.status(error.status).json({ error: error.message });
     }
 
-    return res.status(500).json({ error: "Erro desconhecido" });
+    console.error(error); // opcional, útil para debugging
+    return res.status(500).json({ error: "Erro interno do servidor" });
 };

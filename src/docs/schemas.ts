@@ -12,5 +12,12 @@ export const schemas = {
             updatedAt: { type: "string", format: "date-time" }
         },
         required: ["name", "price", "stock"]
+    },
+    Auth: {
+        type: "object",
+        properties: {
+            email: { type: "string" },
+            password: { type: "string" }
+        }
     }
 };

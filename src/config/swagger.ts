@@ -3,6 +3,7 @@ import swaggerUi from "swagger-ui-express";
 import { schemas } from "../docs/schemas";
 import { productPaths } from "../docs/products";
 import swaggerJsdoc from "swagger-jsdoc";
+import { authPaths } from "../docs/auth";
 
 const router = Router();
 
@@ -12,7 +13,7 @@ const options = {
         info: { title: "API E-commerce", version: "1.0.0" },
         servers: [{ url: "http://localhost:3000/api/" }],
         components: { schemas },
-        paths: { ...productPaths }
+        paths: { ...productPaths, ...authPaths }
     },
     apis: []
 };

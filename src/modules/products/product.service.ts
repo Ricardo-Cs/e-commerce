@@ -1,3 +1,4 @@
+import { AppError } from "../../errors/AppError";
 import { ProductRepository } from "./product.repository";
 import { createProductSchema, updateProductSchema } from "./product.schema";
 import type { Product } from "./product.types";
@@ -11,12 +12,12 @@ export class ProductService {
 
     async getById(id: number) {
         const product = await repo.findById(id);
-        if (!product) throw new Error("Produto não encontrado!");
+        if (!product) throw new AppError("Produto não encontrado!", 400);
         return product;
     }
 
     async create(input: unknown) {
-        const data = createProductSchema.parse(input) as Product;
+        const data = createProductSchema.parse(input) as unknown as Product;
         return repo.create(data);
     }
 

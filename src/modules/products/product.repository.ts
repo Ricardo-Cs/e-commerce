@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import type { Product } from "./product.types";
 
-export const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
 export class ProductRepository {
     async findAll(): Promise<Product[]> {

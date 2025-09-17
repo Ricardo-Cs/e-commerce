@@ -12,4 +12,17 @@ export const createUserSchema = z.object({
     password: z.
         string("A senha deve ser uma string").
         min(8, "A senha deve conter pelo menos 8 caracteres")
-}); 
+});
+
+export const updateUserSchema = z.object({
+    name: z.
+        string("O nome deve ser uma string").
+        optional(),
+    email: z.
+        email("Formato de email inválido").
+        optional(),
+    password: z.
+        string("A senha deve ser uma string").
+        min(8, "A senha deve conter pelo menos 8 caracteres").
+        optional()
+})

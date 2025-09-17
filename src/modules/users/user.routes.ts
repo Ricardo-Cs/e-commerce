@@ -6,6 +6,10 @@ import { authMiddleware } from "../../middlewares/auth";
 const router = Router();
 const userController = new UserController();
 
-router.get('/', authMiddleware, isAdmin, (req, res, next) => userController.getAll(req, res))
+router.get('/me', authMiddleware, (req, res) => userController.getOne(req, res));
+router.put('/me', authMiddleware, (req, res) => userController.update(req, res));
 
+// Rotas admin
+router.get('/', authMiddleware, isAdmin, (req, res) => userController.getAll(req, res))
+router.get('/:id', authMiddleware, isAdmin, (req, res) => userController.getOneById(req, res));
 export default router;

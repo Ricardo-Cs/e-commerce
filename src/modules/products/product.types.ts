@@ -1,8 +1,10 @@
+import type { Decimal } from "@prisma/client/runtime/library"
+
 export interface Product {
     id: number
     name: string
     description?: string | null
-    price: number
+    price: Decimal
     stock: number
     imageUrl?: string | null
     createdAt: Date

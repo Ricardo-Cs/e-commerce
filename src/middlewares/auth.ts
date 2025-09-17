@@ -5,7 +5,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
     const authHeader = req.headers.authorization;
     if (!authHeader) return res.status(401).json({ error: "Token não fornecido" });
 
-    const [, token] = authHeader.split(" "); // corrigido
+    const [, token] = authHeader.split(" ");
 
     if (!token) return res.status(401).json({ error: "Token não fornecido" });
 

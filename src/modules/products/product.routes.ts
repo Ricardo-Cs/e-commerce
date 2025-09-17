@@ -7,7 +7,7 @@ const router = Router();
 const productController = new ProductController();
 
 // Rotas públicas
-router.get("/", (req, res) => productController.getAll(req, res));
+router.get("/", (req, res) => productController.getAll(req, res)); // Falta inserir os filtros/paginação
 router.get("/:id", (req, res) => productController.getById(req, res));
 
 // Rotas de admin)

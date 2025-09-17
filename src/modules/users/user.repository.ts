@@ -19,4 +19,11 @@ export class UserRepository {
     async create(data: Omit<User, "id" | "isAdmin" | "createdAt" | "updatedAt">): Promise<User> {
         return prisma.user.create({ data });
     }
+
+    async update(id: number, data: Partial<Omit<User, "id" | "createdAt" | "updatedAt">>): Promise<User> {
+        return prisma.user.update({
+            where: { id },
+            data,
+        });
+    }
 }

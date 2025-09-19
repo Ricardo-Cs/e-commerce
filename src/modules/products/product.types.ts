@@ -7,6 +7,6 @@ export interface Product {
     price: Decimal
     stock: number
     imageUrl?: string | null
-    createdAt: Date
-    updatedAt: Date
+    createdAt?: Date
+    updatedAt?: Date
 }

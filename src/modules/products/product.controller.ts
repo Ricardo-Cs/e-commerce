@@ -4,7 +4,7 @@ import { ProductService } from "./product.service"
 const service = new ProductService()
 
 export class ProductController {
-    async getAll(req: Request, res: Response) {
+    async getAll(req_: Request, res: Response) {
         const products = await service.getAll();
         res.json(products);
     }

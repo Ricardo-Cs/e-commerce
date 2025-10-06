@@ -4,7 +4,7 @@ import { CategoryService } from "./category.service";
 const service = new CategoryService();
 
 export class CategoryController {
-    async getAll(req: Request, res: Response) {
+    async getAll(req_: Request, res: Response) {
         const categories = await service.getAll();
         res.json(categories);
     }

@@ -4,6 +4,11 @@ import { UserService } from "./user.service";
 const service = new UserService();
 
 export class UserController {
+    async getAll(req_: Request, res: Response) {
+        const users = await service.getAll();
+        res.json(users);
+    }
+
     async getOne(req: Request, res: Response) {
         const user = await service.getOne((req as any).user);
         res.json(user);
@@ -18,11 +23,6 @@ export class UserController {
     async create(req: Request, res: Response) {
         const user = await service.create(req.body);
         res.status(201).json(user);
-    }
-
-    async getAll(req: Request, res: Response) {
-        const users = await service.getAll();
-        res.json(users);
     }
 
     async update(req: Request, res: Response) {

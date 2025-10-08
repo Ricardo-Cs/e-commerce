@@ -8,6 +8,18 @@ export class ProductRepository {
         return prisma.product.findMany();
     }
 
+    async findAllPaginated(limit: number, skip: number): Promise<[Product[], number]> {
+        const [products, total] = await prisma.$transaction([
+            prisma.product.findMany({
+                take: limit, // LIMIT
+                skip: skip,  // OFFSET
+            }),
+            prisma.product.count(),
+        ]);
+
+        return [products as Product[], total];
+    }
+
     async findById(id: number): Promise<Product | null> {
         return prisma.product.findUnique({ where: { id } });
     }

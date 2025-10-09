@@ -1,0 +1,188 @@
+type: collection.insomnia.rest/5.0
+name: E-Commerce API
+meta:
+  id: wrk_02d87e094c85440bb0ca8efe4825a0d3
+  created: 1760021214074
+  modified: 1760021251808
+  description: ""
+collection:
+  - name: Auth
+    meta:
+      id: fld_4f5f47abea8042dcab342c0fdc6e1081
+      created: 1760021268457
+      modified: 1760021277428
+      sortKey: -1760021268457
+      description: ""
+    children:
+      - url: http://localhost:3000/api/v1/auth/login
+        name: Login (Get JWT)
+        meta:
+          id: req_95dbc3a9deb44219a14559b3fa8110d8
+          created: 1760021214106
+          modified: 1760023295059
+          isPrivate: false
+          description: ""
+          sortKey: -1760021273345
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email": "ricardo@gmail.com",
+            	"password": "123456789"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/v1/auth/register
+        name: Cadastrar
+        meta:
+          id: req_d4ec494066fe49948531ee795a672e4d
+          created: 1760021752519
+          modified: 1760022989635
+          isPrivate: false
+          description: ""
+          sortKey: -1760021273295
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Ricardo Costa",
+            	"email": "ricardo@gmail.com",
+            	"password": "123456789"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: User
+    meta:
+      id: fld_28f26d7ac318460481d442f52c54f97f
+      created: 1760021522234
+      modified: 1760021522234
+      sortKey: -1760021522235
+      description: ""
+  - name: Products
+    meta:
+      id: fld_e33e60e8f8c047cc8d32654f21e5d9fc
+      created: 1760023441582
+      modified: 1760024931910
+      sortKey: -1760023441582
+      description: ""
+    children:
+      - url: http://localhost:3000/api/v1/products/
+        name: Cadastrar Produto
+        meta:
+          id: req_b8a3c39ae1154d5ca10a557c269ff595
+          created: 1760023446039
+          modified: 1760024921181
+          isPrivate: false
+          description: ""
+          sortKey: -1760023502422
+        method: POST
+        body:
+          mimeType: application/json
+          text: '  {"name": "Samsung Galaxy Tab S8", "description": "Tablet Samsung Galaxy
+            Tab S8", "price": 3899.99, "stock": 30}'
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.1
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzYwMDIzNjQzLCJleHAiOjE3NjAwMjcyNDN9.2vdTrYcI1260m9nMBqNvrb6Mk6PUQJDKSPpeLb2NMm0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/v1/products
+        name: Listar Produtos
+        meta:
+          id: req_03fdad942eac4d7e92ba4762b18de474
+          created: 1760023872359
+          modified: 1760024982332
+          isPrivate: false
+          description: ""
+          sortKey: -1760023872359
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        authentication:
+          type: bearer
+          token: pip install -r .\requirements.txt  --trusted-host pypi.org --trusted-host
+            pypi.python.org --trusted-host files.pythonhosted.org
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:3000/api/v1/products/1
+        name: Listar produto pelo ID
+        meta:
+          id: req_114919487f524f358b77eecdef1ef86d
+          created: 1760024951761
+          modified: 1760024969470
+          isPrivate: false
+          description: ""
+          sortKey: -1760023687390.5
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Cart
+    meta:
+      id: fld_8a5e2e522f7549c49b8ba31f6ae6856a
+      created: 1760024616253
+      modified: 1760024616253
+      sortKey: -1760024616253
+      description: ""
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_dbc8e5ecad500ae3c303af14e467d13e60472a5e
+    created: 1760021214085
+    modified: 1760021214085
+environments:
+  name: Base Environment
+  meta:
+    id: env_dbc8e5ecad500ae3c303af14e467d13e60472a5e
+    created: 1760021214084
+    modified: 1760021214084
+    isPrivate: false

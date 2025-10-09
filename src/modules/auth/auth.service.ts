@@ -1,9 +1,11 @@
 import { AppError } from "../../errors/AppError";
 import { compareHash, hashPassword } from "../../libs/bcrypt/bcrypt";
+import { CartRepository } from "../carts/cart.repository";
 import { UserRepository } from "../users/user.repository";
 import { loginAuthSchema, registerAuthSchema } from "./auth.schema";
 
-const userRepo = new UserRepository()
+const userRepo = new UserRepository();
+const cartRepo = new CartRepository();
 
 export class AuthService {
     async login(input: unknown) {
@@ -33,6 +35,7 @@ export class AuthService {
         }
 
         const user = await userRepo.create(data);
+        const cart = await cartRepo.create(user.id as number);
 
         return {
             message: "Usuário registrado com sucesso",

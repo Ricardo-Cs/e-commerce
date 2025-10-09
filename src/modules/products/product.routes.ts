@@ -12,6 +12,7 @@ router.get("/:id", authMiddleware, (req, res) => productController.getById(req, 
 
 // Rotas de admin
 router.post("/", authMiddleware, isAdmin, (req, res) => productController.create(req, res));
+router.post("/many", authMiddleware, isAdmin, (req, res) => productController.createMany(req, res));
 router.put("/:id", authMiddleware, isAdmin, (req, res) => productController.update(req, res));
 router.delete("/:id", authMiddleware, isAdmin, (req, res) => productController.delete(req, res));
 

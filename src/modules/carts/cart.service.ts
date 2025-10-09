@@ -2,7 +2,7 @@ import { AppError } from "../../errors/AppError";
 import type { Product } from "../products/product.types";
 import { CartRepository } from "./cart.repository";
 import { insertItemCartSchema, updateItemCartSchema } from "./cart.schema";
-import type { CartItem, CartResponse } from "./cart.types";
+import type { Cart, CartItem, CartResponse } from "./cart.types";
 
 const cartRepo = new CartRepository();
 
@@ -23,9 +23,10 @@ export class CartService {
         return cartResponse;
     }
 
-    async insertItem(input: unknown): Promise<CartItem> {
+    async insertItem(user_id: number, input: unknown): Promise<CartItem> {
         const data = insertItemCartSchema.parse(input);
-        return await cartRepo.insertItem(data);
+        const cart = await this.getUserCart(user_id);
+        return await cartRepo.insertItem({ product_id_fk: data.product_id, cart_id_fk: cart.id as any });
     }
 
     async updateCartItem(input: unknown): Promise<CartItem> {

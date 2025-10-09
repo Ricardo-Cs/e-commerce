@@ -23,10 +23,18 @@ export class CartService {
         return cartResponse;
     }
 
-    async insertItem(user_id: number, input: unknown): Promise<CartItem> {
-        const data = insertItemCartSchema.parse(input);
-        const cart = await this.getUserCart(user_id);
-        return await cartRepo.insertItem({ product_id_fk: data.product_id, cart_id_fk: cart.id as any });
+    async insertItem(user_id: number, input: unknown): Promise<Boolean> {
+        try {
+            const data = insertItemCartSchema.parse(input);
+            const cart = await this.getUserCart(user_id);
+            for(let i = 0; i < data.quantity; i++) {
+                await cartRepo.insertItem({ product_id_fk: data.product_id, cart_id_fk: cart.id as any });
+            }
+            return true
+        } catch(err) {
+            console.log("Erro: ", err);
+            throw new AppError("Erro ao adicionar item no carrinho", 500);
+        }
     }
 
     async updateCartItem(input: unknown): Promise<CartItem> {

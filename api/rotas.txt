@@ -42,9 +42,9 @@ DELETE /categories/:id (admin) → remover ✅
 
 Carrinho
 
-GET /cart → ver carrinho do usuário
+GET /cart → ver carrinho do usuário ✅
 
-POST /cart/items → adicionar item { productId, quantity }
+POST /cart/items → adicionar item { productId, quantity } ✅
 
 PUT /cart/items/:id → atualizar quantidade
 

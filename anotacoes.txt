@@ -1,1 +1,27 @@
 1 - Ao registrar usuário, mensagem de erro deve ser melhorada. Atual: Status 400 (Bad Request), retorno: { "error": "Email já cadastrado" }
+
+
+
+
+Produtos de teste: [
+  {"name": "AMD RX 6600", "description": "Placa de vídeo AMD RX 6600", "price": 1199.99, "stock": 30},
+  {"name": "NVIDIA RTX 3060", "description": "Placa de vídeo NVIDIA RTX 3060", "price": 1499.99, "stock": 25},
+  {"name": "Intel i7-12700K", "description": "Processador Intel Core i7 de 12ª geração", "price": 1599.99, "stock": 20},
+  {"name": "Ryzen 5 5600X", "description": "Processador AMD Ryzen 5 5600X", "price": 1299.99, "stock": 15},
+  {"name": "Samsung 970 EVO Plus 1TB", "description": "SSD NVMe Samsung 1TB", "price": 699.99, "stock": 40},
+  {"name": "Kingston HyperX 16GB", "description": "Memória RAM DDR4 16GB Kingston HyperX", "price": 499.99, "stock": 50},
+  {"name": "LG 27UL500-W", "description": "Monitor 4K 27\" LG", "price": 1399.99, "stock": 18},
+  {"name": "Dell XPS 13", "description": "Notebook Dell XPS 13", "price": 6999.99, "stock": 10},
+  {"name": "Apple MacBook Air M2", "description": "Notebook Apple MacBook Air com chip M2", "price": 9499.99, "stock": 12},
+  {"name": "Sony WH-1000XM4", "description": "Fone de ouvido Sony com cancelamento de ruído", "price": 1499.99, "stock": 35},
+  {"name": "Bose QuietComfort 45", "description": "Fone de ouvido Bose com cancelamento de ruído", "price": 1599.99, "stock": 28},
+  {"name": "Logitech MX Master 3", "description": "Mouse ergonômico Logitech MX Master 3", "price": 499.99, "stock": 60},
+  {"name": "Razer BlackWidow V3", "description": "Teclado mecânico Razer BlackWidow V3", "price": 699.99, "stock": 40},
+  {"name": "Canon EOS R6", "description": "Câmera mirrorless Canon EOS R6", "price": 14999.99, "stock": 8},
+  {"name": "Nikon Z6 II", "description": "Câmera mirrorless Nikon Z6 II", "price": 13999.99, "stock": 6},
+  {"name": "GoPro HERO11", "description": "Câmera de ação GoPro HERO11", "price": 3499.99, "stock": 20},
+  {"name": "Amazon Echo Dot 5ª Geração", "description": "Smart speaker Amazon Echo Dot", "price": 399.99, "stock": 100},
+  {"name": "Google Nest Hub 2ª Geração", "description": "Smart display Google Nest Hub", "price": 599.99, "stock": 45},
+  {"name": "Apple iPad Air 5", "description": "Tablet Apple iPad Air 5ª geração", "price": 4599.99, "stock": 25},
+  {"name": "Samsung Galaxy Tab S8", "description": "Tablet Samsung Galaxy Tab S8", "price": 3899.99, "stock": 30}
+]

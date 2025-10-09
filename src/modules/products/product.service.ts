@@ -38,6 +38,19 @@ export class ProductService {
         return repo.create(data);
     }
 
+    async createMany(input: unknown[]): Promise<Omit<Product, "id" | "createdAt" | "updatedAt">[]> {
+        const results = [];
+
+        for (const element of input) {
+            const data = createProductSchema.parse(element) as unknown as Product;
+            const created = await repo.create(data);
+            results.push(created);
+        }
+
+        return results;
+    }
+
+
     async update(id: number, input: unknown) {
         // Valida o input com Zod e força o tipo para Partial<Product> para compatibilidade com o repository
         const data = updateProductSchema.parse(input) as Partial<Product>;

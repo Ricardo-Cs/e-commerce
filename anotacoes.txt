@@ -1,0 +1,1 @@
+1 - Ao registrar usuário, mensagem de erro deve ser melhorada. Atual: Status 400 (Bad Request), retorno: { "error": "Email já cadastrado" }

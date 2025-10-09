@@ -1,0 +1,95 @@
+Auth
+
+POST /auth/register → criar conta ✅
+
+POST /auth/login → autenticar e gerar tokens ✅
+
+POST /auth/logout → invalidar sessão
+
+POST /auth/refresh → renovar token
+
+Usuários
+
+GET /users/me → dados do usuário logado ✅
+
+PUT /users/me → atualizar perfil ✅
+
+GET /users/:id (admin) → detalhes ✅
+
+GET /users (admin) → listar todos ✅
+
+Produtos
+
+GET /products → listar com filtros/paginação ✅
+
+GET /products/:id → detalhes ✅
+
+POST /products (admin) → criar ✅
+
+PUT /products/:id (admin) → atualizar ✅
+
+DELETE /products/:id (admin) → remover ✅
+
+Categorias
+
+GET /categories → listar ✅
+
+POST /categories (admin) → criar ✅
+
+PUT /categories/:id (admin) → atualizar ✅
+
+DELETE /categories/:id (admin) → remover ✅
+
+Carrinho
+
+GET /cart → ver carrinho do usuário
+
+POST /cart/items → adicionar item { productId, quantity }
+
+PUT /cart/items/:id → atualizar quantidade
+
+DELETE /cart/items/:id → remover item
+
+DELETE /cart/items -> esvaziar carrinho
+
+Pedidos
+
+POST /orders → criar a partir do carrinho
+
+GET /orders → listar pedidos do usuário
+
+GET /orders/:id → detalhes do pedido
+
+PUT /orders/:id/cancel → cancelar (se ainda pendente)
+
+GET /orders (admin) → listar todos
+
+PUT /orders/:id/status (admin) → atualizar status
+
+Pagamentos
+
+POST /payments → iniciar pagamento { orderId, method }
+
+POST /payments/webhook → callback do gateway
+
+GET /payments/:id → status
+
+Endereços
+
+GET /addresses → listar endereços do usuário
+
+POST /addresses → criar
+
+PUT /addresses/:id → atualizar
+
+DELETE /addresses/:id → remover
+
+Extras (opcionais)
+
+POST /wishlist/:productId → adicionar favorito
+
+DELETE /wishlist/:productId → remover
+
+POST /reviews/:productId → criar avaliação
+
+GET /reviews/:productId → listar avaliações

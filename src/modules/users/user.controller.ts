@@ -4,7 +4,7 @@ import { UserService } from "./user.service";
 const service = new UserService();
 
 export class UserController {
-    async getAll(req_: Request, res: Response) {
+    async getAll(_req: Request, res: Response) {
         const users = await service.getAll();
         res.json(users);
     }

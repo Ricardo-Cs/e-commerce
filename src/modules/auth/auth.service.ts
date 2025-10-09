@@ -1,4 +1,5 @@
 import { AppError } from "../../errors/AppError";
+import { compareHash, hashPassword } from "../../libs/bcrypt/bcrypt";
 import { UserRepository } from "../users/user.repository";
 import { loginAuthSchema, registerAuthSchema } from "./auth.schema";
 
@@ -9,7 +10,7 @@ export class AuthService {
         const data = loginAuthSchema.parse(input);
         const user = await userRepo.findByEmail(data.email);
 
-        if (!user || user.password != data.password) throw new AppError("Email ou senha incorretos", 401);
+        if (!user || !(await compareHash(data.password, user.password))) throw new AppError("Email ou senha incorretos", 401);
 
         return {
             login: true,
@@ -21,13 +22,19 @@ export class AuthService {
     async register(input: unknown) {
         const data = registerAuthSchema.parse(input);
 
-        const userExists = await userRepo.findByEmail(data.email);
-        if (userExists) throw new AppError("Email já cadastrado", 400);
+        if (await userRepo.findByEmail(data.email)) {
+            throw new AppError("Email já cadastrado", 400);
+        }
+
+        try {
+            data.password = await hashPassword(data.password);
+        } catch (err) {
+            throw new AppError("Erro ao processar senha", 500);
+        }
 
         const user = await userRepo.create(data);
 
         return {
-            success: true,
             message: "Usuário registrado com sucesso",
             user: {
                 id: user.id,

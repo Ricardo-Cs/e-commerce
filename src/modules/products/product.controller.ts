@@ -10,7 +10,7 @@ export class ProductController {
         res.json(product);
     }
 
-    async getAll(req: Request, res: Response) {
+    async listWithPagination(req: Request, res: Response) {
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 10;
 
@@ -21,6 +21,11 @@ export class ProductController {
 
     async create(req: Request, res: Response) {
         const product = await service.create(req.body);
+        res.status(201).json(product);
+    }
+
+    async createMany(req: Request, res: Response) {
+        const product = await service.createMany(req.body);
         res.status(201).json(product);
     }
 

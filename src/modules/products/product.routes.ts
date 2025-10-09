@@ -7,10 +7,10 @@ const router = Router();
 const productController = new ProductController();
 
 // Rotas públicas
-router.get("/", (req, res) => productController.listWithPagination(req, res));
-router.get("/:id", (req, res) => productController.getById(req, res));
+router.get("/", authMiddleware, (req, res) => productController.listWithPagination(req, res));
+router.get("/:id", authMiddleware, (req, res) => productController.getById(req, res));
 
-// Rotas de admin)
+// Rotas de admin
 router.post("/", authMiddleware, isAdmin, (req, res) => productController.create(req, res));
 router.put("/:id", authMiddleware, isAdmin, (req, res) => productController.update(req, res));
 router.delete("/:id", authMiddleware, isAdmin, (req, res) => productController.delete(req, res));

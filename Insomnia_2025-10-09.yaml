@@ -120,12 +120,12 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: http://localhost:3000/api/v1/products
+      - url: http://localhost:3000/api/v1/products?page=1&limit=5
         name: Listar Produtos
         meta:
           id: req_03fdad942eac4d7e92ba4762b18de474
           created: 1760023872359
-          modified: 1760024982332
+          modified: 1760028187867
           isPrivate: false
           description: ""
           sortKey: -1760023872359
@@ -135,8 +135,7 @@ collection:
             value: insomnia/11.6.1
         authentication:
           type: bearer
-          token: pip install -r .\requirements.txt  --trusted-host pypi.org --trusted-host
-            pypi.python.org --trusted-host files.pythonhosted.org
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNzYwMDI4MTgxLCJleHAiOjE3NjAwMzE3ODF9.sli80nfIRygxt7wNHoS1VaJBlmxEcztLk8Abj3_OAmc
         settings:
           renderRequestBody: true
           encodeUrl: true

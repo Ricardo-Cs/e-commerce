@@ -5,8 +5,8 @@ export function Footer() {
     <footer className="border-t bg-background mt-10">
       <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
         {/* Logo / Nome */}
-        <Link href="/" className="text-base font-semibold text-foreground">
-          Minha Loja
+        <Link href="/" className="text-base font-semibold text-foreground font-logo">
+          Locker
         </Link>
 
         {/* Links */}
@@ -25,9 +25,9 @@ export function Footer() {
           </Link>
         </div>
 
-        {/* Direitos */}
         <p className="text-xs text-center sm:text-right">
-          © {new Date().getFullYear()} Minha Loja. Todos os direitos reservados.
+          © {new Date().getFullYear()} 
+          <span className="font-logo"> Locker.</span> Todos os direitos reservados.
         </p>
       </div>
     </footer>

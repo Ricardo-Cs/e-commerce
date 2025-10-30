@@ -20,7 +20,7 @@ export function Header() {
             className="rounded-r-none bg-white"
             />
             <Button className="rounded-l-none bg-primary hover:bg-black/80" size="icon">
-            <ArrowRightToLine className="w-4 h-4 text-white" />
+                <ArrowRightToLine className="w-4 h-4 text-white cursor-pointer" />
             </Button>
         </div>
         </div>

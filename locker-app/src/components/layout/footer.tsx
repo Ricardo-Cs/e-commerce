@@ -26,7 +26,7 @@ export function Footer() {
         </div>
 
         <p className="text-xs text-center sm:text-right">
-          © {new Date().getFullYear()} 
+          © {new Date().getFullYear()}
           <span className="font-logo"> Locker.</span> Todos os direitos reservados.
         </p>
       </div>

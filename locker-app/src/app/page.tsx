@@ -3,10 +3,10 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 
 export default function HomePage() {
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen gap-6 p-6">
-      <h1 className="text-3xl font-bold">Bem-vindo à Loja</h1>
+    <div className="flex flex-col items-center gap-6 w-full max-w-3xl">
+      <h1 className="text-3xl font-bold text-center">Bem-vindo à Loja</h1>
 
-      <Card className="w-full max-w-sm text-center">
+      <Card className="text-center">
         <CardHeader>
           <CardTitle>Produto em Destaque</CardTitle>
         </CardHeader>
@@ -15,6 +15,6 @@ export default function HomePage() {
           <Button>Comprar</Button>
         </CardContent>
       </Card>
-    </main>
+    </div>
   )
 }

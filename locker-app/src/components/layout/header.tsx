@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ShoppingCart } from "lucide-react"
+import { Search, ShoppingCart } from "lucide-react"
 
 export function Header({ showSearch = true, showLogin = true, showCart = true }: { showSearch?: boolean, showLogin?: boolean, showCart?: boolean }) {
   return (
@@ -14,7 +14,9 @@ export function Header({ showSearch = true, showLogin = true, showCart = true }:
         <div className="flex justify-center flex-1 mx-8">
           <div className="flex w-full max-w-lg">
             <Input type="search" placeholder="Buscar produtos..." className="rounded-r-none bg-white" />
-            <Button className="rounded-l-none bg-primary" size="icon">→</Button>
+            <Button className="rounded-l-none bg-primary cursor-pointer" size="icon">
+              <Search className="w-4 h-4 text-white" />
+            </Button>
           </div>
         </div>
       )}

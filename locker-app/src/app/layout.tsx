@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "../styles/globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Locker",
@@ -21,6 +21,7 @@ export default function RootLayout({
         <main className="flex-1 flex flex-col items-center p-3">
           {children}
         </main>
+        <Toaster richColors closeButton position="top-right" />
         <Footer />
       </body>
     </html>

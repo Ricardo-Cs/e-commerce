@@ -7,7 +7,7 @@ const router = Router();
 const productController = new ProductController();
 
 // Rotas públicas
-router.get("/", authMiddleware, (req, res) => productController.listWithPagination(req, res));
+router.get("/", (req, res) => productController.listWithPagination(req, res));
 router.get("/:id", authMiddleware, (req, res) => productController.getById(req, res));
 
 // Rotas de admin

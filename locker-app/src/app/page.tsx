@@ -1,15 +1,15 @@
-import { Metadata } from "next";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../components/ui/carousel";
-import { Card, CardContent } from "../components/ui/card";
+import { Metadata } from "next"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../components/ui/carousel"
+import { Card, CardContent } from "../components/ui/card"
+import TestButton from "../components/TestButton"
 
 export const metadata: Metadata = {
   title: "Locker | Home",
-};
+}
 
 export default function HomePage() {
   return (
     <div className="container flex flex-col items-center">
-
       <Carousel className="w-full">
         <CarouselContent>
           {[
@@ -35,7 +35,8 @@ export default function HomePage() {
         <CarouselNext className="cursor-pointer right-2" />
       </Carousel>
 
-
+      {/* Componente client */}
+      <TestButton />
     </div>
   )
 }

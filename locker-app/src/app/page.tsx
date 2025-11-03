@@ -1,20 +1,41 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Metadata } from "next";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../components/ui/carousel";
+import { Card, CardContent } from "../components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Locker | Home",
+};
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col items-center gap-6 w-full max-w-3xl">
-      <h1 className="text-3xl font-bold text-center">Bem-vindo a Locker</h1>
+    <div className="container flex flex-col items-center">
 
-      <Card className="text-center">
-        <CardHeader>
-          <CardTitle>Produto em Destaque</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="mb-4">Camisa básica — R$ 59,90</p>
-          <Button>Comprar</Button>
-        </CardContent>
-      </Card>
+      <Carousel className="w-full">
+        <CarouselContent>
+          {[
+            "https://themes.kabum.com.br/conteudo/layout/7209/1762173513.jpg",
+            "https://themes.kabum.com.br/conteudo/layout/7209/1762173513.jpg",
+            "https://themes.kabum.com.br/conteudo/layout/7209/1762173513.jpg",
+            "https://themes.kabum.com.br/conteudo/layout/7209/1762173513.jpg",
+          ].map((src, index) => (
+            <CarouselItem key={index} className="w-full">
+              <Card className="border-0 p-0 shadow-none">
+                <CardContent className="p-0">
+                  <img
+                    src={src}
+                    alt={`Banner ${index + 1}`}
+                    className="w-full h-[250px] object-cover rounded-lg"
+                  />
+                </CardContent>
+              </Card>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="cursor-pointer left-2" />
+        <CarouselNext className="cursor-pointer right-2" />
+      </Carousel>
+
+
     </div>
   )
 }

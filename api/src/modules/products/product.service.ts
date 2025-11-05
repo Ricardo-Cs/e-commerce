@@ -3,6 +3,7 @@ import cloudinary from "../../libs/cloudinary/cloudinary";
 import { ProductRepository } from "./product.repository";
 import { createProductSchema, updateProductSchema } from "./product.schema";
 import type { PaginatedProducts, Product } from "./product.types";
+import fs from "fs/promises";
 
 const repo = new ProductRepository()
 
@@ -63,6 +64,7 @@ export class ProductService {
 
     async uploadImage(filePath: string) {
         const result = await cloudinary.uploader.upload(filePath)
+        await fs.unlink(filePath) // remove o arquivo local após upload
         return result.secure_url
     }
 

@@ -40,4 +40,25 @@ export class ProductController {
         await service.delete(id);
         res.status(204).send();
     }
+
+    async uploadImages(req: Request, res: Response) {
+        try {
+            if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
+                return res.status(400).json({ error: "Nenhum arquivo enviado" })
+            }
+
+            const urls = await Promise.all(
+                req.files.map(file => service.uploadImage(file.path))
+            )
+
+            const updatedProduct = await service.addImagesToProduct(
+                Number(req.params.id),
+                urls
+            )
+
+            res.json(updatedProduct)
+        } catch {
+            res.status(500).json({ error: "Erro ao enviar imagens" })
+        }
+    }
 }

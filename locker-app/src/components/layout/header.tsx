@@ -13,7 +13,7 @@ export function Header({ showSearch = true, showLogin = true, showCart = true }:
       {showSearch && (
         <div className="flex justify-center flex-1 mx-8">
           <div className="flex w-full max-w-lg">
-            <Input type="search" placeholder="Buscar produtos..." className="rounded-r-none bg-white" />
+            <Input type="search" placeholder="Buscar produtos..." className="rounded-r-none bg-white border-gray-400" />
             <Button className="rounded-l-none bg-primary cursor-pointer" size="icon">
               <Search className="w-4 h-4 text-white" />
             </Button>
@@ -22,7 +22,7 @@ export function Header({ showSearch = true, showLogin = true, showCart = true }:
       )}
 
       <div className="flex items-center gap-3">
-        {showLogin && <Button variant="outline" asChild><Link href="/login">Login</Link></Button>}
+        {showLogin && <Button variant="outline" asChild className="border-gray-400"><Link href="/login">Login</Link></Button>}
         {showCart && (
           <Button asChild className="p-0">
             <Link href="/cart" className="flex items-center justify-center" aria-label="Carrinho">

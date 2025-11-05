@@ -2,8 +2,7 @@ import z from "zod";
 
 export const createProductSchema = z.object({
     name: z.
-        string("O nome deve ser uma string").
-        min(8, "O nome precisa ter pelo menos 8 caracteres."),
+        string("O nome deve ser uma string"),
     description: z.
         string("A descrição deve ser uma string").
         nullable().

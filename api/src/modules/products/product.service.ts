@@ -1,4 +1,5 @@
 import { AppError } from "../../errors/AppError";
+import cloudinary from "../../libs/cloudinary/cloudinary";
 import { ProductRepository } from "./product.repository";
 import { createProductSchema, updateProductSchema } from "./product.schema";
 import type { PaginatedProducts, Product } from "./product.types";
@@ -50,7 +51,6 @@ export class ProductService {
         return results;
     }
 
-
     async update(id: number, input: unknown) {
         // Valida o input com Zod e força o tipo para Partial<Product> para compatibilidade com o repository
         const data = updateProductSchema.parse(input) as Partial<Product>;
@@ -59,5 +59,14 @@ export class ProductService {
 
     async delete(id: number): Promise<void> {
         repo.delete(id);
+    }
+
+    async uploadImage(filePath: string) {
+        const result = await cloudinary.uploader.upload(filePath)
+        return result.secure_url
+    }
+
+    async addImagesToProduct(productId: number, urls: string[]) {
+        return repo.addImages(productId, urls)
     }
 }

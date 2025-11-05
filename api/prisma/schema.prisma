@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
@@ -26,13 +26,20 @@ model Product {
   description String?
   price       Decimal  @db.Decimal(10, 2)
   stock       Int
-  imageUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  images     ProductImage[]
   categories ProductCategory[]
   cartItems  CartItem[]
   orderItems OrderItem[]
+}
+
+model ProductImage {
+  id         Int     @id @default(autoincrement())
+  product_id Int
+  url        String
+  product    Product @relation(fields: [product_id], references: [id])
 }
 
 model Category {

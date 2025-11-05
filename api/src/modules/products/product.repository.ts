@@ -36,6 +36,20 @@ export class ProductRepository {
     }
 
     async delete(id: number): Promise<void> {
-        prisma.product.delete({ where: { id } })
+        await prisma.product.delete({ where: { id } })
     }
+
+    async addImages(productId: number, urls: string[]) {
+        return prisma.product.update({
+            where: { id: productId },
+            data: {
+                images: {
+                    create: urls.map(url => ({ url }))
+                }
+            },
+            include: { images: true }
+        })
+    }
+
+
 }

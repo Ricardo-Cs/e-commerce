@@ -39,7 +39,7 @@ model ProductImage {
   id         Int     @id @default(autoincrement())
   product_id Int
   url        String
-  product    Product @relation(fields: [product_id], references: [id])
+  product    Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
 }
 
 model Category {
@@ -51,39 +51,43 @@ model Category {
 model ProductCategory {
   product_id  Int
   category_id Int
-  product     Product  @relation(fields: [product_id], references: [id])
-  category    Category @relation(fields: [category_id], references: [id])
+  product     Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  category    Category @relation(fields: [category_id], references: [id], onDelete: Cascade)
 
   @@id([product_id, category_id])
 }
 
 model Cart {
   id         Int        @id @default(autoincrement())
-  user_id_fk Int        @unique
-  user       User       @relation(fields: [user_id_fk], references: [id])
+  user_id_fk Int?
+  user       User?      @relation(fields: [user_id_fk], references: [id])
   items      CartItem[]
   createdAt  DateTime   @default(now())
 }
 
 model CartItem {
-  id            Int     @id @default(autoincrement())
+  id            Int @id @default(autoincrement())
   cart_id_fk    Int
   product_id_fk Int
-  quantity      Int     @default(1)
-  cart          Cart    @relation(fields: [cart_id_fk], references: [id])
-  product       Product @relation(fields: [product_id_fk], references: [id])
+  quantity      Int @default(1)
+
+  // salva preço do item no momento – essencial
+  priceSnapshot Decimal @db.Decimal(10, 2)
+
+  cart    Cart    @relation(fields: [cart_id_fk], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [product_id_fk], references: [id])
 }
 
 model Order {
   id         Int      @id @default(autoincrement())
-  user_id_fk Int
-  user       User     @relation(fields: [user_id_fk], references: [id])
-  status     String   @default("PENDING") // PENDING, PAID, SHIPPED
+  user_id_fk Int?
+  user       User?    @relation(fields: [user_id_fk], references: [id])
+  status     String   @default("PENDING")
   total      Decimal  @db.Decimal(10, 2)
   createdAt  DateTime @default(now())
 
-  items   OrderItem[]
-  payment Payment?
+  items    OrderItem[]
+  payments Payment[]
 }
 
 model OrderItem {
@@ -92,15 +96,17 @@ model OrderItem {
   product_id_fk Int
   quantity      Int
   price         Decimal @db.Decimal(10, 2)
-  order         Order   @relation(fields: [order_id_fk], references: [id])
-  product       Product @relation(fields: [product_id_fk], references: [id])
+
+  order   Order   @relation(fields: [order_id_fk], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [product_id_fk], references: [id])
 }
 
 model Payment {
   id        Int      @id @default(autoincrement())
-  order_id  Int      @unique
-  method    String // ex: CARD, PIX, PAYPAL
-  status    String   @default("PENDING") // PENDING, CONFIRMED, FAILED
-  order     Order    @relation(fields: [order_id], references: [id])
+  order_id  Int
+  method    String
+  status    String   @default("PENDING")
   createdAt DateTime @default(now())
+
+  order Order @relation(fields: [order_id], references: [id], onDelete: Cascade)
 }

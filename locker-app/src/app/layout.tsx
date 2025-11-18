@@ -16,13 +16,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className="flex flex-col min-h-screen bg-background">
-        <Header />
-        <main className="flex-1 flex flex-col items-center p-3">
-          {children}
-        </main>
+      <body className="min-h-screen flex flex-col bg-background">
+        <div className="mx-auto w-full sticky top-0 z-50 bg-white backdrop-blur-sm shadow-sm">
+          <Header />
+        </div>
+
+        <main className="flex-1 mx-auto w-full">{children}</main>
+
         <Toaster richColors closeButton position="top-right" />
-        <Footer />
+        <div className="container mx-auto w-full px-6 py-8">
+          <Footer />
+        </div>
       </body>
     </html>
   );

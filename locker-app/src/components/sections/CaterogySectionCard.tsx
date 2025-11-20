@@ -12,7 +12,7 @@ export function CategorySectionCard({ title, description, image }: CategorySecti
     <Card className="relative group overflow-hidden w-full rounded-xl shadow-lg hover:shadow-2xl transition duration-500 p-0 border-none">
       {/* Container da Imagem */}
       <div
-        className="h-96 w-full bg-secondary flex items-center justify-center bg-cover bg-center"
+        className="relative h-96 w-full bg-secondary flex items-center justify-center bg-cover bg-center"
         style={{ backgroundImage: `url('${image}')` }}
       >
         {/* Overlay */}

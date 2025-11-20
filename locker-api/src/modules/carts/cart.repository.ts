@@ -5,8 +5,11 @@ const prisma = new PrismaClient();
 
 export class CartRepository {
     async findByUserId(user_id: number): Promise<Cart | null> {
-        return prisma.cart.findUnique({ where: { user_id_fk: user_id } })
+        return prisma.cart.findFirst({
+            where: { user_id_fk: user_id },
+        });
     }
+
 
     async findAllById(cart_id: number): Promise<CartItemWithProduct[]> {
         return prisma.cartItem.findMany({
@@ -19,7 +22,7 @@ export class CartRepository {
         return prisma.cart.create({ data: { user_id_fk: user_id } });
     }
 
-    async insertItem(data: Omit<CartItem, "id">): Promise<CartItem> {
+    async insertItem(data: Omit<CartItem, "id"> & { priceSnapshot: number }): Promise<CartItem> {
         return prisma.cartItem.create({ data });
     }
 

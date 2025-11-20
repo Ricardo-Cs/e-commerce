@@ -2,9 +2,10 @@ import type { Product } from "../products/product.types";
 
 export interface Cart {
     id?: number;
-    user_id_fk: number;
+    user_id_fk?: number | null;
     createdAt?: Date;
 }
+
 
 export interface CartItem {
     id?: number;

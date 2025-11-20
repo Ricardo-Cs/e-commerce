@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgres"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -24,7 +24,7 @@ model Product {
   id          Int      @id @default(autoincrement())
   name        String
   description String?
-  price       Decimal  @db.Decimal(10, 2)
+  price       Decimal
   stock       Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -72,7 +72,7 @@ model CartItem {
   quantity      Int @default(1)
 
   // salva preço do item no momento – essencial
-  priceSnapshot Decimal @db.Decimal(10, 2)
+  priceSnapshot Decimal
 
   cart    Cart    @relation(fields: [cart_id_fk], references: [id], onDelete: Cascade)
   product Product @relation(fields: [product_id_fk], references: [id])
@@ -83,7 +83,7 @@ model Order {
   user_id_fk Int?
   user       User?    @relation(fields: [user_id_fk], references: [id])
   status     String   @default("PENDING")
-  total      Decimal  @db.Decimal(10, 2)
+  total      Decimal
   createdAt  DateTime @default(now())
 
   items    OrderItem[]
@@ -95,7 +95,7 @@ model OrderItem {
   order_id_fk   Int
   product_id_fk Int
   quantity      Int
-  price         Decimal @db.Decimal(10, 2)
+  price         Decimal
 
   order   Order   @relation(fields: [order_id_fk], references: [id], onDelete: Cascade)
   product Product @relation(fields: [product_id_fk], references: [id])

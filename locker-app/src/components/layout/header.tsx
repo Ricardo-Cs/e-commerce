@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, ShoppingCart } from "lucide-react";
+import { useState } from "react";
 
 export function Header({
   showSearch = true,
@@ -13,6 +14,8 @@ export function Header({
   showLogin?: boolean;
   showCart?: boolean;
 }) {
+  const [openLogin, setOpenLogin] = useState(false);
+
   return (
     <header className="container flex items-center mx-auto justify-between py-4 bg-white">
       <Link href="/" className="text-4xl font-bold font-logo">
@@ -32,14 +35,14 @@ export function Header({
 
       <div className="flex items-center gap-3">
         {showLogin && (
-          <Button variant="outline" asChild className="border-gray-400 bg-white">
-            <Link href="/login">Login</Link>
+          <Button variant="outline" className="border-gray-400 bg-white" onClick={() => setOpenLogin(true)}>
+            Login
           </Button>
         )}
 
         {showCart && (
           <Button asChild className="p-0">
-            <Link href="/cart" className="flex items-center justify-center" aria-label="Carrinho">
+            <Link href="/cart" aria-label="Carrinho">
               <ShoppingCart className="w-5 h-5" />
             </Link>
           </Button>

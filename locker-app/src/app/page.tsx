@@ -1,6 +1,4 @@
 import { Metadata } from "next";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
-import { Button } from "../components/ui/button";
 import { CategorySectionCard } from "../components/sections/CaterogySectionCard";
 
 export const metadata: Metadata = {

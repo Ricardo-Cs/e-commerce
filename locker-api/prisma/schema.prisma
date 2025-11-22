@@ -43,8 +43,12 @@ model ProductImage {
 }
 
 model Category {
-  id       Int               @id @default(autoincrement())
-  name     String            @unique
+  id       Int        @id @default(autoincrement())
+  name     String
+  parentId Int?
+  parent   Category?  @relation("CategoryParent", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryParent")
+
   products ProductCategory[]
 }
 

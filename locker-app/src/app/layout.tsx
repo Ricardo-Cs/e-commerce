@@ -4,7 +4,7 @@ import "../styles/globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "sonner";
-import { AuthProvider } from "@/components/auth/AuthProvider"; // ⬅️ Importar o Provider
+import { AuthProvider } from "../components/auth/AuthProvider";
 
 export const metadata: Metadata = {
   title: "Locker",

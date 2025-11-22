@@ -1,11 +1,10 @@
-// src/components/layout/header.tsx
 "use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, ShoppingCart, User } from "lucide-react"; // ⬅️ Adicionar o ícone User
+import { Search, ShoppingCart, User } from "lucide-react";
 import { useState } from "react";
-import { useSession } from "next-auth/react"; // ⬅️ Importar useSession
+import { useSession } from "next-auth/react";
 import AuthModal from "../auth/AuthModal";
 
 export function Header({
@@ -18,7 +17,7 @@ export function Header({
   showCart?: boolean;
 }) {
   const [openLogin, setOpenLogin] = useState(false);
-  const { status } = useSession(); // ⬅️ Usar useSession para checar o status
+  const { status } = useSession();
   const isAuthenticated = status === "authenticated";
 
   return (

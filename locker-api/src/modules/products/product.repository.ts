@@ -24,10 +24,33 @@ export class ProductRepository {
         return prisma.product.findUnique({
             where: { id },
             include: {
-                images: true
+                images: true,
+                categories: {
+                    include: {
+                        category: {
+                            select: {
+                                id: true,
+                                name: true,
+                                parent: {
+                                    select: {
+                                        id: true,
+                                        name: true
+                                    }
+                                },
+                                children: {
+                                    select: {
+                                        id: true,
+                                        name: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         });
     }
+
 
     async create(data: Omit<Product, "id" | "createdAt" | "updatedAt">): Promise<Product> {
         return prisma.product.create({ data });

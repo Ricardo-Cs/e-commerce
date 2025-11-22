@@ -1,10 +1,12 @@
 import { AppError } from "../../errors/AppError";
+import { ProductService } from "../products/product.service";
 import type { Product } from "../products/product.types";
 import { CartRepository } from "./cart.repository";
 import { insertItemCartSchema, updateItemCartSchema } from "./cart.schema";
 import type { Cart, CartItem, CartResponse } from "./cart.types";
 
 const cartRepo = new CartRepository();
+const productService = new ProductService();
 
 export class CartService {
     async getUserCart(user_id: number): Promise<CartResponse> {
@@ -27,11 +29,24 @@ export class CartService {
         try {
             const data = insertItemCartSchema.parse(input);
             const cart = await this.getUserCart(user_id);
-            for(let i = 0; i < data.quantity; i++) {
-                await cartRepo.insertItem({ product_id_fk: data.product_id, cart_id_fk: cart.id as any });
+
+            const product = await productService.getById(data.product_id);
+
+            if (!product) {
+                throw new AppError("Produto não encontrado", 404);
+            }
+
+            const priceSnapshot = product.price;
+
+            for (let i = 0; i < data.quantity; i++) {
+                await cartRepo.insertItem({
+                    product_id_fk: data.product_id,
+                    cart_id_fk: cart.id as any,
+                    priceSnapshot: priceSnapshot
+                });
             }
             return true
-        } catch(err) {
+        } catch (err) {
             console.log("Erro: ", err);
             throw new AppError("Erro ao adicionar item no carrinho", 500);
         }

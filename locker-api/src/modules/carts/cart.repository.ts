@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import type { Cart, CartItem, CartItemWithProduct } from "./cart.types";
+import type { Decimal } from "@prisma/client/runtime/library";
 
 const prisma = new PrismaClient();
 
@@ -22,7 +23,7 @@ export class CartRepository {
         return prisma.cart.create({ data: { user_id_fk: user_id } });
     }
 
-    async insertItem(data: Omit<CartItem, "id"> & { priceSnapshot: number }): Promise<CartItem> {
+    async insertItem(data: Omit<CartItem, "id"> & { priceSnapshot: Decimal }): Promise<CartItem> {
         return prisma.cartItem.create({ data });
     }
 

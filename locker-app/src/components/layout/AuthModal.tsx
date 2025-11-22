@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { signIn } from "next-auth/react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export default function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const [email, setEmail] = useState("");
@@ -16,34 +18,29 @@ export default function AuthModal({ open, onOpenChange }: { open: boolean; onOpe
     setLoading(true);
     setError("");
 
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+    const res = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
 
-      if (!res.ok) {
-        setError("Credenciais inválidas");
-        setLoading(false);
-        return;
-      }
-
-      const data = await res.json();
-      localStorage.setItem("token", data.token);
-
-      onOpenChange(false); // fecha modal
-      setEmail("");
-      setPassword("");
-    } catch {
-      setError("Erro de conexão");
+    if (res?.error) {
+      setError("Credenciais inválidas");
+      setLoading(false);
+      return;
     }
 
+    onOpenChange(false); // fecha modal
+    setEmail("");
+    setPassword("");
     setLoading(false);
   }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
+      <VisuallyHidden asChild>
+        <DialogTitle className="DialogTitle">Login</DialogTitle>
+      </VisuallyHidden>
       <DialogContent className="max-w-md p-8 rounded-xl">
         <Tabs defaultValue="login" className="w-full">
           <TabsList className="grid grid-cols-2 w-full mb-6">

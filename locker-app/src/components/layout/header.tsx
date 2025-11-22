@@ -1,10 +1,12 @@
+// src/components/layout/header.tsx
 "use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, ShoppingCart } from "lucide-react";
+import { Search, ShoppingCart, User } from "lucide-react"; // ⬅️ Adicionar o ícone User
 import { useState } from "react";
-import AuthModal from "./AuthModal";
+import { useSession } from "next-auth/react"; // ⬅️ Importar useSession
+import AuthModal from "../auth/AuthModal";
 
 export function Header({
   showSearch = true,
@@ -16,6 +18,8 @@ export function Header({
   showCart?: boolean;
 }) {
   const [openLogin, setOpenLogin] = useState(false);
+  const { status } = useSession(); // ⬅️ Usar useSession para checar o status
+  const isAuthenticated = status === "authenticated";
 
   return (
     <>
@@ -40,12 +44,6 @@ export function Header({
         )}
 
         <div className="flex items-center gap-3">
-          {showLogin && (
-            <Button variant="outline" className="border-gray-400 bg-white" onClick={() => setOpenLogin(true)}>
-              Login
-            </Button>
-          )}
-
           {showCart && (
             <Button asChild className="p-0">
               <Link href="/cart" aria-label="Carrinho">
@@ -53,6 +51,18 @@ export function Header({
               </Link>
             </Button>
           )}
+          {showLogin &&
+            (isAuthenticated ? (
+              <Button asChild variant="outline" className="border-gray-400 bg-white">
+                <Link href="/" aria-label="Acessar Perfil">
+                  <User className="w-5 h-5" />
+                </Link>
+              </Button>
+            ) : (
+              <Button variant="outline" className="border-gray-400 bg-white" onClick={() => setOpenLogin(true)}>
+                Login
+              </Button>
+            ))}
         </div>
       </header>
 

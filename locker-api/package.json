@@ -7,6 +7,9 @@
     "build": "prisma generate && tsc",
     "start": "node dist/app.js"
   },
+  "prisma": {
+    "seed": "node src/seed.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

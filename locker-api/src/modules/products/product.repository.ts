@@ -20,8 +20,13 @@ export class ProductRepository {
         return [products as Product[], total];
     }
 
-    async findById(id: number): Promise<Product | null> {
-        return prisma.product.findUnique({ where: { id } });
+    async findById(id: number) {
+        return prisma.product.findUnique({
+            where: { id },
+            include: {
+                images: true
+            }
+        });
     }
 
     async create(data: Omit<Product, "id" | "createdAt" | "updatedAt">): Promise<Product> {

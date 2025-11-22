@@ -29,11 +29,12 @@ export class ProductService {
         };
     }
 
-    async getById(id: number): Promise<Product> {
+    async getById(id: number) {
         const product = await repo.findById(id);
         if (!product) throw new AppError("Produto não encontrado!", 400);
         return product;
     }
+
 
     async create(input: unknown): Promise<Omit<Product, "id" | "createdAt" | "updatedAt">> {
         const data = createProductSchema.parse(input) as unknown as Product;

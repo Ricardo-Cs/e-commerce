@@ -8,11 +8,13 @@ async function main() {
         name: "Ricardo Costa",
         email: "ricardo@gmail.com",
         password: "123456789",
+        isAdmin: true,
       },
       {
         name: "Pedro Sales",
         email: "pedro@gmail.com",
         password: "123456789",
+        isAdmin: true,
       },
     ],
   });

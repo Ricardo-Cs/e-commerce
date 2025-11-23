@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, ProductImage } from "@prisma/client";
 import type { Product } from "./product.types";
 
 const prisma = new PrismaClient();
@@ -8,16 +8,20 @@ export class ProductRepository {
         return prisma.product.findMany();
     }
 
-    async findAllPaginated(limit: number, skip: number): Promise<[Product[], number]> {
+    async findAllPaginated(
+        limit: number,
+        skip: number
+    ): Promise<[(Product & { images: ProductImage[] })[], number]> {
         const [products, total] = await prisma.$transaction([
             prisma.product.findMany({
-                take: limit, // LIMIT
-                skip: skip,  // OFFSET
+                take: limit,
+                skip: skip,
+                include: { images: true },
             }),
             prisma.product.count(),
         ]);
 
-        return [products as Product[], total];
+        return [products, total];
     }
 
     async findById(id: number) {

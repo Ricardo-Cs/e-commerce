@@ -142,7 +142,7 @@ export default async function ProductPage({ params }: PageProps) {
             <div className="border-t border-gray-200">
               <div className="border-b border-gray-200 py-4">
                 <details className="group">
-                  <summary className="flex justify-between items-center font-medium cursor-pointer list-none text-gray-900 hover:text-accent transition">
+                  <summary className="flex justify-between items-center font-medium cursor-pointer list-none text-gray-900 transition">
                     Detalhes e Composição
                     <span className="transition group-open:rotate-180">
                       <svg
@@ -171,7 +171,7 @@ export default async function ProductPage({ params }: PageProps) {
 
               <div className="border-b border-gray-200 py-4">
                 <details className="group">
-                  <summary className="flex justify-between items-center font-medium cursor-pointer list-none text-gray-900 hover:text-accent transition">
+                  <summary className="flex justify-between items-center font-medium cursor-pointer list-none text-gray-900 transition">
                     Envio e Devoluções
                     <span className="transition group-open:rotate-180">
                       <svg
@@ -191,9 +191,13 @@ export default async function ProductPage({ params }: PageProps) {
                   </summary>
                   <div className="text-gray-600 mt-3 text-sm leading-relaxed">
                     <p className="mb-2">
-                      <strong>Frete Grátis</strong> para todo o Brasil em compras acima de R$ 800,00.
+                      <strong>Retirada Exclusiva em Boutique:</strong> Para garantir a integridade da peça, este item
+                      está disponível apenas para retirada em nossa loja física.
                     </p>
-                    <p>Aceitamos devoluções gratuitas dentro de 30 dias.</p>
+                    <p className="mb-2">
+                      Você receberá uma notificação assim que seu pedido estiver pronto para ser recolhido.
+                    </p>
+                    <p>Trocas e devoluções podem ser realizadas presencialmente em até 30 dias.</p>
                   </div>
                 </details>
               </div>

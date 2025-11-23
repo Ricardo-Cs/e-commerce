@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className="min-h-screen flex flex-col bg-background">
+      <body className="min-h-screen flex flex-col bg-background" suppressHydrationWarning={true}>
         <AuthProvider>
           <div className="mx-auto w-full sticky top-0 z-50 bg-white backdrop-blur-sm shadow-sm">
             <Header />

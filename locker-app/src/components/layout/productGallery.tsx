@@ -50,7 +50,7 @@ export default function ProductGallery({ images, productName }: ProductGalleryPr
                 : "border-transparent hover:border-gray-300 opacity-70 hover:opacity-100"
             }`}
           >
-            <Image src={img.url} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
+            <Image src={img.url} alt={`Thumbnail ${index + 1}`} fill className="object-cover" unoptimized />
           </button>
         ))}
       </div>

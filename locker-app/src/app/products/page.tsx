@@ -6,7 +6,6 @@ import Link from "next/link";
 import { ChevronDown, Filter, X, Check, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { productsApi } from "@/lib/api/endpoints";
-import { toast } from "sonner";
 
 interface Product {
   id: number;
@@ -30,10 +29,15 @@ interface ProductsListResponse {
 
 type SortOrder = "newest" | "price-asc" | "price-desc";
 
+const PRODUCTS_PER_PAGE = 9;
+
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
   const [totalProducts, setTotalProducts] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   const [loading, setLoading] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [priceRange, setPriceRange] = useState(5000);
@@ -70,13 +74,14 @@ export default function ProductsPage() {
     async function fetchProducts() {
       try {
         setLoading(true);
-        const data: ProductsListResponse = await productsApi.list();
+        const data: ProductsListResponse = await productsApi.list(currentPage, PRODUCTS_PER_PAGE);
         const fetchedList = Array.isArray(data.products) ? data.products : [];
 
         setProducts(fetchedList);
         setTotalProducts(data.total || 0);
+        setTotalPages(data.totalPages || 1);
 
-        setDisplayedProducts(sortProducts(fetchedList, "newest"));
+        setDisplayedProducts(sortProducts(fetchedList, sortOrder));
       } catch (error) {
         console.error(error);
       } finally {
@@ -85,7 +90,7 @@ export default function ProductsPage() {
     }
 
     fetchProducts();
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     if (products.length > 0) {
@@ -102,9 +107,6 @@ export default function ProductsPage() {
   };
 
   const getProductImage = (product: Product) => {
-    if (product.images && product.images.length > 0) {
-      return product.images[0].url;
-    }
     return "https://placehold.co/400x550/E0E0E0/202020?text=Sem+Imagem";
   };
 
@@ -115,13 +117,54 @@ export default function ProductsPage() {
     return "Geral";
   };
 
+  const renderPaginationButtons = () => {
+    const pages = [];
+    const maxButtons = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+
+    if (endPage - startPage + 1 < maxButtons) {
+      startPage = Math.max(1, endPage - maxButtons + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          onClick={() => setCurrentPage(i)}
+          className={cn(
+            "px-4 py-2 text-sm font-medium transition",
+            i === currentPage ? "bg-[#0D0D0D] text-white" : "text-gray-600 hover:bg-gray-100"
+          )}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    if (endPage < totalPages) {
+      pages.push(
+        <span key="ellipsis-end" className="px-2 text-gray-400">
+          ...
+        </span>
+      );
+    }
+
+    return pages;
+  };
+
   return (
     <div className="bg-[#FAFAFA] min-h-screen font-sans text-[#0D0D0D]">
       {/* Banner Título */}
       <div className="bg-[#E5E5E5] py-12 md:py-16 text-center">
-        <h1 className="text-4xl md:text-5xl font-serif text-[#0D0D0D] mb-2">Coleção de Roupas</h1>
+        <h1 className="text-4xl md:text-5xl font-serif text-[#0D0D0D] mb-2">Nossa Coleção de Roupas</h1>
         <p className="text-gray-600 text-sm uppercase tracking-widest">
-          {loading ? "Carregando..." : `Mostrando ${displayedProducts.length} de ${totalProducts} produtos`}
+          {loading
+            ? "Carregando..."
+            : `Mostrando ${(currentPage - 1) * PRODUCTS_PER_PAGE + 1}–${Math.min(
+                currentPage * PRODUCTS_PER_PAGE,
+                totalProducts
+              )} de ${totalProducts} produtos`}
         </p>
       </div>
 
@@ -135,7 +178,6 @@ export default function ProductsPage() {
           <span>Filtrar</span>
         </button>
         <div className="relative inline-block text-left">
-          {/* Aplicando o filtro no modo Mobile */}
           <select
             className="block w-full pl-3 pr-8 py-1 text-sm border-none focus:ring-0 text-gray-700 bg-transparent outline-none"
             value={sortOrder}
@@ -202,11 +244,13 @@ export default function ProductsPage() {
             <span className="text-sm text-gray-500">
               {loading
                 ? "Buscando produtos..."
-                : `Exibindo 1–${displayedProducts.length} de ${totalProducts} resultados`}
+                : `Exibindo ${(currentPage - 1) * PRODUCTS_PER_PAGE + 1}–${Math.min(
+                    currentPage * PRODUCTS_PER_PAGE,
+                    totalProducts
+                  )} de ${totalProducts} resultados`}
             </span>
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-700">Ordenar por:</span>
-              {/* Aplicando o filtro no modo Desktop */}
               <select
                 className="border-none text-sm font-medium focus:ring-0 bg-transparent cursor-pointer hover:text-[#0D0D0D] transition outline-none"
                 value={sortOrder}
@@ -231,7 +275,7 @@ export default function ProductsPage() {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10">
               {displayedProducts.map((product) => (
                 <Link key={product.id} href={`/products/${product.id}`} className="group cursor-pointer">
-                  <div className="relative overflow-hidden mb-3 aspect-3/4 bg-[#E5E5E5]">
+                  <div className="relative overflow-hidden mb-3 aspect-[3/4] bg-[#E5E5E5]">
                     <Image
                       src={getProductImage(product)}
                       alt={product.name}
@@ -260,15 +304,28 @@ export default function ProductsPage() {
             </div>
           )}
 
-          {/* Paginação (Estática por enquanto) */}
-          {!loading && totalProducts > displayedProducts.length && (
+          {/* Paginação DINÂMICA */}
+          {totalPages > 1 && (
             <div className="mt-16 flex justify-center">
               <nav className="flex items-center space-x-2">
-                <button className="p-2 text-gray-400 hover:text-[#0D0D0D] transition">
+                {/* Botão Anterior */}
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="p-2 text-gray-400 hover:text-[#0D0D0D] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   <ChevronDown className="w-5 h-5 rotate-90" />
                 </button>
-                <button className="px-4 py-2 text-sm font-medium bg-[#0D0D0D] text-white">1</button>
-                <button className="p-2 text-gray-400 hover:text-[#0D0D0D] transition">
+
+                {/* Renderização dos números de página */}
+                {renderPaginationButtons()}
+
+                {/* Botão Próximo */}
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                  className="p-2 text-gray-400 hover:text-[#0D0D0D] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   <ChevronDown className="w-5 h-5 -rotate-90" />
                 </button>
               </nav>

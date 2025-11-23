@@ -11,7 +11,7 @@ export const categoriesApi = {
 }
 
 export const productsApi = {
-    list: () => api.get("/products"),
+    list: (page: number = 1, limit: number = 9) => api.get(`/products?page=${page}&limit=${limit}`), // Adicionado list com paginação
     get: (id: string) => api.get(`/products/${id}`),
     update: (id: string, data: any) => api.put(`/products/${id}`, data),
     updateCategories: (id: string, categoryIds: number[]) => api.post(`/products/${id}/categories`, { categoryIds }),

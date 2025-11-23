@@ -107,6 +107,9 @@ export default function ProductsPage() {
   };
 
   const getProductImage = (product: Product) => {
+    if (product.images && product.images.length > 0) {
+      return product.images[0].url;
+    }
     return "https://placehold.co/400x550/E0E0E0/202020?text=Sem+Imagem";
   };
 

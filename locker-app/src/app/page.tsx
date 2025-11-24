@@ -70,7 +70,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
             {/* Imagem */}
-            <div className="w-full md:w-1/2 relative aspect-[4/3] md:aspect-square lg:aspect-[4/3]">
+            <div className="w-full md:w-1/2 relative aspect-4/3 md:aspect-square lg:aspect-4/3">
               <Image
                 src="https://placehold.co/800x600/505050/FFFFFF?text=Conceito+Eclat"
                 alt="Visão conceitual da marca Éclat"

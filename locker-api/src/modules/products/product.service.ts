@@ -8,24 +8,30 @@ import fs from "fs/promises";
 const repo = new ProductRepository()
 
 export class ProductService {
-    async getWithPagination(page: number = 1, limit: number = 10): Promise<PaginatedProducts> {
+    async getWithPagination(
+        page: number = 1,
+        limit: number = 10,
+        categories?: number[],
+        maxPrice?: number
+    ): Promise<PaginatedProducts> {
+
         const pageSize = limit > 0 ? limit : 10;
         const pageNumber = page > 0 ? page : 1;
-
-        // Calcula o offset (skip)
         const skip = (pageNumber - 1) * pageSize;
 
-        // Chamamos o repositório para buscar os produtos e o total
-        const [products, total] = await repo.findAllPaginated(pageSize, skip);
-
-        const totalPages = Math.ceil(total / pageSize);
+        const [products, total] = await repo.findAllPaginated(
+            pageSize,
+            skip,
+            categories,
+            maxPrice
+        );
 
         return {
             products,
             total,
             page: pageNumber,
             limit: pageSize,
-            totalPages
+            totalPages: Math.ceil(total / pageSize)
         };
     }
 

@@ -10,15 +10,39 @@ export class ProductRepository {
 
     async findAllPaginated(
         limit: number,
-        skip: number
+        skip: number,
+        categories?: number[],
+        maxPrice?: number
     ): Promise<[(Product & { images: ProductImage[] })[], number]> {
+
+        const where: any = {};
+
+        if (categories && categories.length > 0) {
+            where.categories = {
+                some: {
+                    category_id: { in: categories },
+                },
+            };
+        }
+
+        if (maxPrice) {
+            where.price = { lte: maxPrice };
+        }
+
         const [products, total] = await prisma.$transaction([
             prisma.product.findMany({
                 take: limit,
                 skip: skip,
-                include: { images: true },
+                where,
+                include: {
+                    images: true,
+                    categories: {
+                        include: { category: true }
+                    }
+                }
             }),
-            prisma.product.count(),
+
+            prisma.product.count({ where })
         ]);
 
         return [products, total];

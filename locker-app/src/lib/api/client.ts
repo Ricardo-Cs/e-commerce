@@ -7,9 +7,11 @@ import { getSession } from "next-auth/react"
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL!
 
 async function request(path: string, options: RequestInit = {}) {
-    // 1. OBTÉM O TOKEN DA SESSÃO DO NEXTAUTH
-    const session = await getSession();
-    const token = session?.user?.accessToken;
+    let token = null;
+    if (typeof window !== "undefined") {
+        const session = await getSession();
+        token = session?.user?.accessToken;
+    }
 
     let body = options.body;
 

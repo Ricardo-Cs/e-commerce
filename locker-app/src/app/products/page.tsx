@@ -34,14 +34,34 @@ const PRODUCTS_PER_PAGE = 9;
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+  const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined);
   const [totalProducts, setTotalProducts] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const [loading, setLoading] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [priceRange, setPriceRange] = useState(5000);
+  const [priceInput, setPriceInput] = useState<String>("0");
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
+
+  // Utilitárias
+  const toggleCategory = (id: number) => {
+    setSelectedCategories((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]));
+  };
+
+  const handlePriceChange = (value: string) => {
+    setPriceInput(value);
+
+    const cleanValue = value.replace(/[^0-9,]/g, "").replace(",", ".");
+    const numericValue = parseFloat(cleanValue);
+
+    if (!isNaN(numericValue) && numericValue >= 0) {
+      setMaxPrice(numericValue);
+    } else if (value === "") {
+      setMaxPrice(5000);
+    }
+  };
 
   const sortProducts = (list: Product[], order: SortOrder): Product[] => {
     const sortedList = [...list];
@@ -74,13 +94,19 @@ export default function ProductsPage() {
     async function fetchProducts() {
       try {
         setLoading(true);
-        const data: ProductsListResponse = await productsApi.list(currentPage, PRODUCTS_PER_PAGE);
+
+        const data: ProductsListResponse = await productsApi.list({
+          page: currentPage,
+          limit: PRODUCTS_PER_PAGE,
+          categories: selectedCategories,
+          maxPrice: maxPrice,
+        });
+
         const fetchedList = Array.isArray(data.products) ? data.products : [];
 
         setProducts(fetchedList);
         setTotalProducts(data.total || 0);
         setTotalPages(data.totalPages || 1);
-
         setDisplayedProducts(sortProducts(fetchedList, sortOrder));
       } catch (error) {
         console.error(error);
@@ -90,7 +116,7 @@ export default function ProductsPage() {
     }
 
     fetchProducts();
-  }, [currentPage]);
+  }, [currentPage, selectedCategories, maxPrice]);
 
   useEffect(() => {
     if (products.length > 0) {
@@ -202,11 +228,16 @@ export default function ProductsPage() {
             <div className="border-b border-gray-200 pb-6">
               <h3 className="font-serif text-lg font-medium mb-4">Categorias</h3>
               <ul className="space-y-3 text-sm text-gray-600">
-                {["Todos", "Feminino", "Masculino", "Acessórios"].map((cat) => (
-                  <li key={cat}>
+                {["Masculino", "Feminino", "Acessórios"].map((cat, i) => (
+                  <li key={i}>
                     <label className="flex items-center cursor-pointer group">
                       <div className="relative flex items-center">
-                        <input type="checkbox" className="peer sr-only" />
+                        <input
+                          type="checkbox"
+                          checked={selectedCategories.includes(i + 1)}
+                          onChange={() => toggleCategory(i + 1)}
+                          className="peer sr-only"
+                        />
                         <div className="w-4 h-4 border border-gray-300 mr-3 flex items-center justify-center transition group-hover:border-[#0D0D0D] peer-checked:bg-[#0D0D0D] peer-checked:border-[#0D0D0D]">
                           <Check className="w-2.5 h-2.5 text-white opacity-0 peer-checked:opacity-100" />
                         </div>
@@ -220,21 +251,27 @@ export default function ProductsPage() {
 
             {/* Filtro: Preço (mantido estático) */}
             <div className="border-b border-gray-200 pb-6">
-              <h3 className="font-serif text-lg font-medium mb-4">Preço</h3>
-              <div className="flex flex-col space-y-4">
+              <h3 className="font-serif text-lg font-medium mb-4">Preço Máximo</h3>
+
+              <div className="relative flex items-center border border-gray-300 focus-within:border-[#0D0D0D] transition rounded-md shadow-sm bg-white">
+                <span className="inline-flex items-center px-3 text-sm text-gray-500 font-medium">R$</span>
+
                 <input
-                  type="range"
+                  type="text"
                   min="0"
                   max="5000"
-                  value={priceRange}
-                  onChange={(e) => setPriceRange(Number(e.target.value))}
-                  className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#0D0D0D]"
+                  value={formatCurrency(maxPrice ?? 5000)
+                    .replace("R$", "")
+                    .trim()}
+                  onChange={(e) => handlePriceChange(e.target.value)}
+                  onBlur={() => setPriceInput(String(maxPrice ?? 5000))}
+                  placeholder="5000"
+                  className="block w-full border-none pr-3 py-2 text-sm text-[#0D0D0D] placeholder-gray-400 focus:ring-0 outline-none"
                 />
-                <div className="flex justify-between text-xs text-gray-600">
-                  <span>R$ 0</span>
-                  <span className="font-medium">R$ {priceRange}</span>
-                  <span>R$ 5k+</span>
-                </div>
+              </div>
+
+              <div className="mt-3 text-xs text-gray-500 text-right">
+                Filtro ativo: <span className="font-semibold text-[#0D0D0D]">{formatCurrency(maxPrice ?? 5000)}</span>
               </div>
             </div>
           </div>

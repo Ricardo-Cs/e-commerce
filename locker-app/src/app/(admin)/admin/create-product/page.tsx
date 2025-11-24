@@ -1,8 +1,7 @@
-// src/app/admin/create-product/page.tsx
 "use client";
 
 import { useState } from "react";
-import { api } from "@/lib/api/client"; // Certifique-se de que o cliente API está importado
+import { api } from "@/lib/api/client";
 
 export default function CreateProductPage() {
   const [name, setName] = useState("");
@@ -11,7 +10,7 @@ export default function CreateProductPage() {
   const [stock, setStock] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false); // Adicionado para UX
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Check, Plus } from "lucide-react";
 import { toast } from "sonner";
-import { CategoryModal } from "../../../../components/admin/categoryModal";
+import { CategoryModal } from "../../../../../components/admin/categoryModal";
 
 interface Category {
   id: number;

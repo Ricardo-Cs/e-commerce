@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { Button } from "../ui/button";
+import { DollarSign } from "lucide-react";
 
 export default function ProductPayButton({ product }: { product: any }) {
   const [loading, setLoading] = useState(false);
@@ -26,12 +28,21 @@ export default function ProductPayButton({ product }: { product: any }) {
   }
 
   return (
-    <button
-      className="flex-1 bg-primary text-white py-4 px-6 rounded-full font-semibold hover:bg-gray-800 transition"
+    <Button
+      variant="default"
+      size="default"
+      className="flex-1 py-4 px-6 rounded-full font-semibold tracking-wide shadow-lg flex items-center justify-center gap-2 group"
       onClick={handlePay}
       disabled={loading}
     >
-      {loading ? "Processando..." : "Pagar Agora"}
-    </button>
+      {loading ? (
+        "Processando..."
+      ) : (
+        <>
+          <span>Pagar Agora</span>
+          <DollarSign className="w-5 h-5" />
+        </>
+      )}
+    </Button>
   );
 }

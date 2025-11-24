@@ -1,12 +1,11 @@
-// src/app/products/[id]/page.tsx
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { Key } from "react";
 import { Breadcrumbs } from "../../../components/layout/breadCumbs";
 import Image from "next/image";
 import ProductGallery from "../../../components/layout/productGallery";
-import { ShoppingCart } from "lucide-react";
+import ProductPayButton from "../../../components/payment/ProductPayButton";
+import { AddToCartButton } from "../../../components/cart/AddToCartButton";
 
-// --- INTERFACES ---
 interface CategoryData {
   id: number;
   name: string;
@@ -132,10 +131,8 @@ export default async function ProductPage({ params }: PageProps) {
 
             {/* Botões de Ação */}
             <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <button className="flex-1 bg-primary text-white py-4 px-6 rounded-full font-semibold tracking-wide hover:bg-gray-800 transition shadow-lg flex items-center justify-center gap-2 group">
-                <span>Adicionar ao Carrinho</span>
-                <ShoppingCart className="w-5 h-5" />
-              </button>
+              <AddToCartButton product={product} />
+              <ProductPayButton product={product} />
             </div>
 
             {/* Acordeões de Informações Extras (HTML nativo <details>) */}
@@ -205,36 +202,6 @@ export default async function ProductPage({ params }: PageProps) {
           </div>
         </div>
       </main>
-
-      {/* Seção: Complete o Look (Placeholder - Dados Estáticos) */}
-      <section className="bg-white py-16 border-t border-gray-100">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-serif font-medium text-primary mb-8 uppercase tracking-wider">
-            Você também pode gostar
-          </h2>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[1, 2, 3, 4].map((item) => (
-              <a href="#" key={item} className="group block">
-                <div className="aspect-3/4 bg-secondary rounded-lg overflow-hidden mb-3 relative">
-                  <Image
-                    src={`https://placehold.co/400x550/E0E0E0/202020?text=Produto+${item}`}
-                    alt="Produto Relacionado"
-                    width={400}
-                    height={550}
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                    unoptimized
-                  />
-                </div>
-                <h3 className="text-sm font-medium text-gray-900 group-hover:text-accent transition">
-                  Produto Relacionado {item}
-                </h3>
-                <p className="text-sm text-gray-500">R$ 299,00</p>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

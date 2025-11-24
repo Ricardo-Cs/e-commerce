@@ -6,6 +6,7 @@ import { Search, ShoppingCart, User } from "lucide-react";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import AuthModal from "../auth/AuthModal";
+import { useCart } from "../../context/CartContext";
 
 export function Header({
   showSearch = true,
@@ -19,6 +20,7 @@ export function Header({
   const [openLogin, setOpenLogin] = useState(false);
   const { status } = useSession();
   const isAuthenticated = status === "authenticated";
+  const { itemCount } = useCart();
 
   return (
     <>
@@ -44,11 +46,18 @@ export function Header({
 
         <div className="flex items-center gap-3">
           {showCart && (
-            <Button asChild className="p-0">
-              <Link href="/cart" aria-label="Carrinho">
-                <ShoppingCart className="w-5 h-5" />
-              </Link>
-            </Button>
+            <div className="relative">
+              <Button asChild className="p-0">
+                <Link href="/cart" aria-label={`Carrinho (${itemCount} itens)`}>
+                  <ShoppingCart className="w-5 h-5" />
+                </Link>
+              </Button>
+              {itemCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 size-4 flex items-center justify-center rounded-full bg-red-600 text-[10px] text-white font-bold pointer-events-none">
+                  {itemCount}
+                </span>
+              )}
+            </div>
           )}
           {showLogin &&
             (isAuthenticated ? (

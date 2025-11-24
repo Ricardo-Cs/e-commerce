@@ -25,7 +25,7 @@ function CartItemRow({ item }: { item: CartItem }) {
     <div className="flex items-center py-4 border-b border-gray-200 last:border-b-0">
       {/* Imagem e Nome */}
       <Link href={`/products/${item.id}`} className="flex items-center gap-4 flex-1">
-        <div className="relative w-20 h-20 flex-shrink-0 bg-[#E5E5E5]">
+        <div className="relative w-20 h-20 shrink-0 bg-[#E5E5E5]">
           <Image src={item.image} alt={item.name} fill className="object-cover" sizes="80px" unoptimized />
         </div>
         <div className="flex flex-col">

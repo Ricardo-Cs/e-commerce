@@ -315,7 +315,7 @@ export default function ProductsPage() {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10">
               {displayedProducts.map((product) => (
                 <Link key={product.id} href={`/products/${product.id}`} className="group cursor-pointer">
-                  <div className="relative overflow-hidden mb-3 aspect-[3/4] bg-[#E5E5E5]">
+                  <div className="relative overflow-hidden mb-3 aspect-3/4 bg-[#E5E5E5]">
                     <Image
                       src={getProductImage(product)}
                       alt={product.name}

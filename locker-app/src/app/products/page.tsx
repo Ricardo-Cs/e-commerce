@@ -35,14 +35,17 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+
   const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined);
+
+  const [priceInput, setPriceInput] = useState<string>("");
+
   const [totalProducts, setTotalProducts] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const [loading, setLoading] = useState(true);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [priceInput, setPriceInput] = useState<String>("0");
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
 
   // Utilitárias
@@ -50,16 +53,45 @@ export default function ProductsPage() {
     setSelectedCategories((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]));
   };
 
+  const formatCurrency = (value: string | number) => {
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(Number(value));
+  };
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (priceInput.trim() === "") {
+        setMaxPrice(undefined);
+        return;
+      }
+
+      const cleanValue = priceInput.replace(/\./g, "").replace(",", ".");
+      const numericValue = parseFloat(cleanValue);
+
+      if (!isNaN(numericValue)) {
+        setMaxPrice(numericValue);
+      }
+    }, 800);
+
+    return () => clearTimeout(timeoutId);
+  }, [priceInput]);
+
   const handlePriceChange = (value: string) => {
     setPriceInput(value);
+  };
 
-    const cleanValue = value.replace(/[^0-9,]/g, "").replace(",", ".");
+  const handleBlur = () => {
+    if (priceInput.trim() === "") return;
+
+    const cleanValue = priceInput.replace(/\./g, "").replace(",", ".");
     const numericValue = parseFloat(cleanValue);
 
-    if (!isNaN(numericValue) && numericValue >= 0) {
-      setMaxPrice(numericValue);
-    } else if (value === "") {
-      setMaxPrice(5000);
+    if (!isNaN(numericValue)) {
+      setPriceInput(formatCurrency(numericValue).replace("R$", "").trim());
+    } else {
+      setPriceInput("");
     }
   };
 
@@ -124,13 +156,6 @@ export default function ProductsPage() {
       setDisplayedProducts(sorted);
     }
   }, [sortOrder, products]);
-
-  const formatCurrency = (value: string | number) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(Number(value));
-  };
 
   const getProductImage = (product: Product) => {
     if (product.images && product.images.length > 0) {
@@ -221,10 +246,10 @@ export default function ProductsPage() {
 
       {/* Layout Principal */}
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 flex items-start gap-12">
-        {/* Sidebar Desktop (mantido) */}
+        {/* Sidebar Desktop */}
         <aside className="hidden md:block w-1/4 sticky top-32">
           <div className="space-y-8 pr-4">
-            {/* Filtro: Categorias (mantido estático) */}
+            {/* Filtro: Categorias */}
             <div className="border-b border-gray-200 pb-6">
               <h3 className="font-serif text-lg font-medium mb-4">Categorias</h3>
               <ul className="space-y-3 text-sm text-gray-600">
@@ -249,7 +274,7 @@ export default function ProductsPage() {
               </ul>
             </div>
 
-            {/* Filtro: Preço (mantido estático) */}
+            {/* Filtro: Preço */}
             <div className="border-b border-gray-200 pb-6">
               <h3 className="font-serif text-lg font-medium mb-4">Preço Máximo</h3>
 
@@ -258,20 +283,19 @@ export default function ProductsPage() {
 
                 <input
                   type="text"
-                  min="0"
-                  max="5000"
-                  value={formatCurrency(maxPrice ?? 5000)
-                    .replace("R$", "")
-                    .trim()}
+                  value={priceInput}
                   onChange={(e) => handlePriceChange(e.target.value)}
-                  onBlur={() => setPriceInput(String(maxPrice ?? 5000))}
-                  placeholder="5000"
+                  onBlur={handleBlur}
+                  placeholder="Sem limite"
                   className="block w-full border-none pr-3 py-2 text-sm text-[#0D0D0D] placeholder-gray-400 focus:ring-0 outline-none"
                 />
               </div>
 
               <div className="mt-3 text-xs text-gray-500 text-right">
-                Filtro ativo: <span className="font-semibold text-[#0D0D0D]">{formatCurrency(maxPrice ?? 5000)}</span>
+                Filtro ativo:{" "}
+                <span className="font-semibold text-[#0D0D0D]">
+                  {maxPrice ? formatCurrency(maxPrice) : "Sem limite"}
+                </span>
               </div>
             </div>
           </div>
@@ -311,7 +335,7 @@ export default function ProductsPage() {
           ) : displayedProducts.length === 0 ? (
             <div className="text-center py-20 text-gray-500">Nenhum produto encontrado.</div>
           ) : (
-            /* Grid de Produtos Reais (usa displayedProducts) */
+            /* Grid de Produtos */
             <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10">
               {displayedProducts.map((product) => (
                 <Link key={product.id} href={`/products/${product.id}`} className="group cursor-pointer">
@@ -325,7 +349,6 @@ export default function ProductsPage() {
                       unoptimized
                     />
 
-                    {/* Overlay Botão */}
                     <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition duration-300 flex justify-center">
                       <span className="bg-white text-[#0D0D0D] text-xs font-bold uppercase py-2 px-6 shadow-lg hover:bg-[#0D0D0D] hover:text-white transition w-full text-center">
                         Ver Detalhes
@@ -344,11 +367,10 @@ export default function ProductsPage() {
             </div>
           )}
 
-          {/* Paginação DINÂMICA */}
+          {/* Paginação */}
           {totalPages > 1 && (
             <div className="mt-16 flex justify-center">
               <nav className="flex items-center space-x-2">
-                {/* Botão Anterior */}
                 <button
                   onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
@@ -357,10 +379,8 @@ export default function ProductsPage() {
                   <ChevronDown className="w-5 h-5 rotate-90" />
                 </button>
 
-                {/* Renderização dos números de página */}
                 {renderPaginationButtons()}
 
-                {/* Botão Próximo */}
                 <button
                   onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
@@ -374,7 +394,7 @@ export default function ProductsPage() {
         </div>
       </main>
 
-      {/* Modal de Filtros Mobile (Slide Over) */}
+      {/* Modal de Filtros Mobile */}
       {mobileFiltersOpen && (
         <div className="fixed inset-0 z-50 flex justify-end">
           <div

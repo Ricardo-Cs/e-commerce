@@ -84,11 +84,20 @@ export default function CartPage() {
   const isAuthenticated = status === "authenticated";
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<"pix" | "pickup">("pix");
   const router = useRouter();
 
   const handleCheckout = async () => {
     if (!isAuthenticated || !session?.user?.email || !session?.user?.name) {
       setIsLoginModalOpen(true);
+      return;
+    }
+
+    if (selectedPaymentMethod !== "pix") {
+      toast.info("Método Indisponível", {
+        description:
+          "A funcionalidade de 'Retirar na entrada' requer implementação na API. Selecione Pix para continuar.",
+      });
       return;
     }
 
@@ -106,6 +115,7 @@ export default function CartPage() {
         userName: session.user.name,
       };
 
+      // PIX CHECKOUT (Fluxo existente)
       const paymentData = await paymentsApi.checkout(checkoutPayload);
 
       const dataToStore = {
@@ -193,7 +203,7 @@ export default function CartPage() {
               <span className="flex-1">Produto</span>
               <span className="w-32 text-center">Qtd</span>
               <span className="w-24 text-right">Subtotal</span>
-              <span className="w-8 ml-4"></span> {/* Para o botão remover */}
+              <span className="w-8 ml-4"></span>
             </div>
 
             {items.map((item) => (
@@ -213,23 +223,50 @@ export default function CartPage() {
             <h2 className="text-xl font-serif font-semibold mb-4 border-b pb-3">Resumo do Pedido</h2>
 
             <div className="space-y-3 mb-6">
+              <h3 className="text-base font-semibold text-[#0D0D0D]">Selecione o Método</h3>
+              <div className="flex flex-col space-y-2 text-gray-600">
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="pix"
+                    checked={selectedPaymentMethod === "pix"}
+                    onChange={() => setSelectedPaymentMethod("pix")}
+                    className="h-4 w-4 text-[#0D0D0D] border-gray-300 focus:ring-[#0D0D0D]"
+                  />
+                  <span className="text-sm">Pagamento via PIX</span>
+                </label>
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="pickup"
+                    checked={selectedPaymentMethod === "pickup"}
+                    onChange={() => setSelectedPaymentMethod("pickup")}
+                    className="h-4 w-4 text-[#0D0D0D] border-gray-300 focus:ring-[#0D0D0D]"
+                  />
+                  <span className="text-sm">Retirada na Entrada (Pagamento na Loja)</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Resumo Financeiro - Sem Frete */}
+            <div className="space-y-3 mb-6">
               <div className="flex justify-between text-gray-600 text-sm">
                 <span>Subtotal dos Produtos</span>
                 <span>{formatCurrency(totalPrice)}</span>
               </div>
-              <div className="flex justify-between text-gray-600 text-sm">
-                <span>Frete</span>
-                <span className="font-semibold text-green-600">Grátis</span>
-              </div>
+              {/* REMOVIDO: Frete */}
+
               <div className="flex justify-between pt-3 border-t font-bold text-lg text-[#0D0D0D]">
-                <span>Total (Impostos Inclusos)</span>
+                <span>Total (Retirada Grátis)</span>
                 <span>{formatCurrency(totalPrice)}</span>
               </div>
             </div>
 
             <Button
               onClick={handleCheckout}
-              disabled={isCheckingOut || items.length === 0}
+              disabled={isCheckingOut || items.length === 0 || (!isAuthenticated && selectedPaymentMethod === "pickup")}
               className="w-full bg-[#0D0D0D] hover:bg-gray-800 text-white py-3 px-8 text-base rounded-full transition font-semibold"
             >
               {isCheckingOut ? (
@@ -238,7 +275,11 @@ export default function CartPage() {
                   Processando...
                 </>
               ) : isAuthenticated ? (
-                "Continuar para o Pagamento"
+                selectedPaymentMethod === "pix" ? (
+                  "Continuar para o PIX"
+                ) : (
+                  "Finalizar Pedido para Retirada"
+                )
               ) : (
                 "Fazer Login para Pagar"
               )}
@@ -252,7 +293,9 @@ export default function CartPage() {
             )}
             {isAuthenticated && (
               <p className="text-center text-xs text-gray-500 mt-3">
-                Você será redirecionado para a página de pagamento seguro.
+                {selectedPaymentMethod === "pix"
+                  ? "Você será redirecionado para a página de pagamento seguro (Mercado Pago Pix)."
+                  : "Seu pedido será registrado para pagamento e retirada na entrada da loja."}
               </p>
             )}
 

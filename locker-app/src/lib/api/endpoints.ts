@@ -7,6 +7,17 @@ interface ListParams {
     maxPrice?: number
 }
 
+interface CheckoutResponse {
+    qrCode: string; // Código Pix Copia e Cola
+    qrCodeBase64: string; // QR Code em Base64
+    paymentId: number;
+    orderId: number;
+}
+
+interface OrderStatusResponse {
+    status: "PENDING" | "APPROVED" | "CANCELED" | "EXPIRED";
+}
+
 export const usersApi = {
     list: () => api.get("/users"),
     create: (data: any) => api.post("/users", data),
@@ -38,3 +49,12 @@ export const productsApi = {
     updateCategories: (id: string, categoryIds: number[]) =>
         api.post(`/products/${id}/categories`, { categoryIds }),
 }
+
+export const paymentsApi = {
+    checkout: (data: any): Promise<CheckoutResponse> => api.post("/payments/checkout", data)
+}
+
+export const ordersApi = {
+    getStatus: (orderId: number): Promise<OrderStatusResponse> =>
+        api.get(`/orders/${orderId}/status`),
+};

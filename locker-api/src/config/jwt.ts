@@ -6,6 +6,7 @@ const SECRET: Secret = env.JWT_SECRET;
 export interface JwtPayload {
     id: number;
     isAdmin: boolean;
+    name: string;
 }
 
 export function generateToken(payload: JwtPayload, expiresIn = 3600) {

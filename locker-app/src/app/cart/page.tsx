@@ -9,6 +9,9 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import AuthModal from "@/components/auth/AuthModal";
+import { toast } from "sonner";
+import { paymentsApi } from "../../lib/api/endpoints";
+import { useRouter } from "next/navigation";
 
 interface CartItem {
   id: number;
@@ -77,23 +80,57 @@ function CartItemRow({ item }: { item: CartItem }) {
 
 export default function CartPage() {
   const { items, totalPrice, clearCart, itemCount } = useCart();
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const router = useRouter();
 
-  const handleCheckout = () => {
-    if (!isAuthenticated) {
+  const handleCheckout = async () => {
+    if (!isAuthenticated || !session?.user?.email || !session?.user?.name) {
       setIsLoginModalOpen(true);
-    } else {
-      setIsCheckingOut(true);
-      console.log("Iniciando processo de pagamento...");
-      // Substitua este setTimeout pela chamada de API real e redirecionamento para /checkout
-      setTimeout(() => {
-        setIsCheckingOut(false);
-        alert("Redirecionando para o pagamento! (Lógica a ser implementada)");
-        // Exemplo: router.push('/checkout');
-      }, 1000);
+      return;
+    }
+
+    setIsCheckingOut(true);
+
+    try {
+      const checkoutPayload = {
+        items: items.map((item) => ({
+          id: item.id,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+        total: totalPrice,
+        userEmail: session.user.email,
+        userName: session.user.name,
+      };
+
+      const paymentData = await paymentsApi.checkout(checkoutPayload);
+
+      const dataToStore = {
+        orderId: paymentData.orderId,
+        totalPrice: totalPrice,
+        qrCodeBase64: paymentData.qrCodeBase64,
+        qrCode: paymentData.qrCode,
+      };
+
+      sessionStorage.setItem(`payment-${paymentData.orderId}`, JSON.stringify(dataToStore));
+
+      clearCart();
+      router.push(`/checkout/${paymentData.orderId}`);
+
+      toast.success("Pedido gerado com sucesso!", {
+        description: `Redirecionando para a página de pagamento Pix...`,
+        duration: 2000,
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro no Processo de Pagamento", {
+        description: "Não foi possível gerar o Pix. Verifique os logs e a conexão Ngrok.",
+      });
+    } finally {
+      setIsCheckingOut(false);
     }
   };
 

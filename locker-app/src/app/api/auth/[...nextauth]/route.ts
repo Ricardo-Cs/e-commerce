@@ -1,12 +1,11 @@
-// src/app/api/auth/[...nextauth]/route.ts
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-import { jwtDecode } from "jwt-decode" // Importação necessária
+import { jwtDecode } from "jwt-decode"
 
-// Definição da interface do Payload do seu token
 interface CustomJwtPayload {
     id: number;
     isAdmin: boolean;
+    name: string;
     iat: number;
     exp: number;
 }
@@ -38,6 +37,7 @@ const handler = NextAuth({
                         role: decoded.isAdmin ? "admin" : "user",
                         email: credentials?.email,
                         accessToken: data.token,
+                        name: data.token
                     }
                 }
 
@@ -49,19 +49,21 @@ const handler = NextAuth({
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.id = user.id
-                token.role = user.role
-                token.accessToken = user.accessToken
+                token.id = user.id;
+                token.role = user.role;
+                token.accessToken = user.accessToken;
+                token.name = user.name;
             }
-            return token
+            return token;
         },
         async session({ session, token }) {
             if (session.user) {
                 session.user.id = token.id as number
                 session.user.role = token.role as string
                 session.user.accessToken = token.accessToken as string
+                session.user.name = token.name as string;
             }
-            return session
+            return session;
         }
     },
 })

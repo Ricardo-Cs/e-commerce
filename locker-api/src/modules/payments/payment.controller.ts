@@ -22,11 +22,11 @@ export class PaymentController {
 
     async handleWebhook(req: Request, res: Response, next: NextFunction) {
         try {
-            await service.processWebhook(req.query);
-
-            return res.status(200).send("OK");
-        } catch (error) {
-            next(error);
+            await service.processWebhook(req.body);
+            return res.sendStatus(200);
+        } catch (e) {
+            next(e);
         }
     }
+
 }

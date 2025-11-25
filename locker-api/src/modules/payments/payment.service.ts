@@ -1,17 +1,18 @@
+// locker-api/src/modules/payments/payment.service.ts
+
 import { AppError } from "../../errors/AppError";
 import { env } from "../../config/env";
 import { OrderRepository } from "../orders/order.repository";
 import { checkoutSchema } from "./payment.schema";
-import { MercadoPagoPaymentResponse } from "./payment.types";
 import { randomUUID } from "crypto";
 
 type Decimal = any;
 
 const orderRepo = new OrderRepository();
-const MERCADO_PAGO_API_URL = "https://api.mercadopago.com/v1/payments";
+const MP_ORDERS_URL = "https://api.mercadopago.com/v1/orders";
 
 export class PaymentService {
-    async createPixPayment(input: unknown & { userId: number }): Promise<MercadoPagoPaymentResponse> {
+    async createPixPayment(input: unknown & { userId: number }) {
         const validatedInput = checkoutSchema.parse(input);
         const { items, total, userEmail, userName, userId } = validatedInput;
 
@@ -27,29 +28,37 @@ export class PaymentService {
             items: orderItems,
         });
 
-        const paymentPayload = {
-            transaction_amount: total,
-            description: `Pedido #${newOrder.id} - E-commerce Locker`,
-            payment_method_id: "pix",
+        // --- Orders API payload ---
+        const payload = {
+            external_reference: String(newOrder.id),
+            type: "payment",
+            notification_url: `${env.API_URL}/payments/webhook`,
+
             payer: {
                 email: userEmail,
                 first_name: userName.split(" ")[0],
-                last_name: userName.split(" ").slice(1).join(" ") || "Cliente",
+                last_name: userName.split(" ").slice(1).join(" ") || "Cliente"
             },
-            external_reference: String(newOrder.id), // Chave para rastreio no Webhook
-            notification_url: `${env.API_URL}/payments/webhook`,
+
+            transactions: {
+                payments: [
+                    {
+                        payment_method_id: "pix",
+                        transaction_amount: total
+                    }
+                ]
+            }
         };
 
         try {
-
-            const response = await fetch(MERCADO_PAGO_API_URL, {
+            const response = await fetch(MP_ORDERS_URL, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${env.MERCADO_PAGO_ACCESS_TOKEN}`,
-                    "X-Idempotency-Key": randomUUID(),
+                    "X-Idempotency-Key": randomUUID()
                 },
-                body: JSON.stringify(paymentPayload),
+                body: JSON.stringify(payload)
             });
 
             const data = await response.json() as any;
@@ -59,30 +68,32 @@ export class PaymentService {
                 throw new AppError(data.message || "Falha ao gerar Pix", 400);
             }
 
+            // Dados PIX ficam dentro de `charges[0].payment_method`
+            const charge = data.charges[0];
+            const payment = charge.payment_method;
+
             await orderRepo.createPayment(newOrder.id, "PIX", data.status);
 
-            const transactionData = data.point_of_interaction.transaction_data;
-
             return {
-                qrCode: transactionData.qr_code,
-                qrCodeBase64: transactionData.qr_code_base64,
-                paymentId: data.id,
+                qrCode: payment.qr_code,
+                qrCodeBase64: payment.qr_code_base64,
+                ticketUrl: payment.ticket_url,
                 orderId: newOrder.id,
+                mpOrderId: data.id
             };
 
         } catch (error) {
-            console.error("Erro na comunicação com MP:", error);
+            console.error("Erro MP Orders:", error);
             throw new AppError("Erro ao processar pagamento externo", 500);
         }
     }
 
-    // Lida com as notificações de status do Mercado Pago
-    async processWebhook(query: any) {
-        // O Mercado Pago envia um ID de pagamento na query (id ou data.id)
-        const paymentId = query.id || query["data.id"];
-        if (!paymentId || query.topic !== "payment") return;
+    // ------ Webhook ------
+    async processWebhook(body: any) {
+        const orderId = body.data?.id;
+        if (!orderId) return;
 
-        const response = await fetch(`${MERCADO_PAGO_API_URL}/${paymentId}`, {
+        const response = await fetch(`${MP_ORDERS_URL}/${orderId}`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${env.MERCADO_PAGO_ACCESS_TOKEN}`,
@@ -91,14 +102,14 @@ export class PaymentService {
 
         const data = await response.json() as any;
 
-        const orderId = Number(data.external_reference);
-        const status = data.status.toUpperCase();
+        const externalRef = Number(data.external_reference);
+        const status = data.status?.toUpperCase();
 
-        if (orderId && status) {
-            await orderRepo.updateStatus(orderId, status);
+        if (externalRef && status) {
+            await orderRepo.updateStatus(externalRef, status);
 
             if (status === "APPROVED") {
-                console.log(`Pedido ${orderId} APROVADO. Estoque deve ser reduzido aqui.`);
+                console.log(`Pedido ${externalRef} aprovado.`);
             }
         }
     }

@@ -1,10 +1,28 @@
 // locker-api/src/modules/orders/order.repository.ts
-import { PrismaClient } from "@prisma/client";
+import { Order, PrismaClient } from "@prisma/client";
 import { CreateOrderInput } from "./order.types";
 
 const prisma = new PrismaClient();
 
 export class OrderRepository {
+    async findAllForAdmin() {
+        return prisma.order.findMany({
+            select: {
+                id: true,
+                total: true,
+                status: true,
+                createdAt: true,
+                user: {
+                    select: {
+                        name: true,
+                    }
+                }
+            },
+            orderBy: {
+                createdAt: "desc",
+            }
+        });
+    }
     async createOrderAndItems(data: CreateOrderInput) {
         return prisma.order.create({
             data: {

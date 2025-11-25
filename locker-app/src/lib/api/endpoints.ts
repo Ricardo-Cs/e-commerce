@@ -57,4 +57,8 @@ export const paymentsApi = {
 export const ordersApi = {
     getStatus: (orderId: number): Promise<OrderStatusResponse> =>
         api.get(`/orders/${orderId}/status`),
+    updateStatusManually: (orderId: number, status: string) =>
+        api.put(`/orders/${orderId}/status`, { status }),
+
+    listAllOrders: () => api.get("/orders"),
 };

@@ -17,7 +17,8 @@ export class AuthService {
         return {
             login: true,
             id: user.id as number,
-            isAdmin: user.isAdmin
+            isAdmin: user.isAdmin,
+            name: user.name
         };
     }
 

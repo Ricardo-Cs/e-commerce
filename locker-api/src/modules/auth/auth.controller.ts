@@ -11,7 +11,7 @@ export class AuthController {
 
             const login = await service.login({ email, password });
             if (login.login) {
-                const payload: JwtPayload = { id: login.id, isAdmin: login.isAdmin }
+                const payload: JwtPayload = { id: login.id, isAdmin: login.isAdmin, name: login.name };
                 const token = generateToken(payload);
                 return res.json({ token });
             }

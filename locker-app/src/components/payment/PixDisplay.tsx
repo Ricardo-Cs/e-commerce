@@ -1,13 +1,13 @@
 // locker-app/src/components/payment/PixDisplay.tsx
 "use client";
 
-import { Check, Clipboard, Copy, Link, Loader2, QrCode, Timer, Wallet, X } from "lucide-react";
-import Image from "next/image";
+import { Check, Clipboard, Copy, Loader2, QrCode, Timer, Wallet, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { formatCurrency } from "@/lib/utils";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface PixDisplayProps {
   orderId: number;

@@ -17,10 +17,10 @@ export function Footer() {
         </Link>
 
         <div className="flex flex-wrap justify-center gap-6 ml-4">
-          <Link href="/about">Sobre</Link>
-          <Link href="/contact">Contato</Link>
-          <Link href="/privacy">Privacidade</Link>
-          <Link href="/terms">Termos</Link>
+          <Link href="/">Sobre</Link>
+          <Link href="/">Contato</Link>
+          <Link href="/">Privacidade</Link>
+          <Link href="/">Termos</Link>
         </div>
 
         <p className="text-xs text-center sm:text-right">

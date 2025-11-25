@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, ShoppingCart, User, LogOut, ChevronDown } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import { useSession, signOut } from "next-auth/react"; // Importado signOut
+import { useSession, signOut } from "next-auth/react";
 import AuthModal from "../auth/AuthModal";
 import { useCart } from "../../context/CartContext";
 
@@ -46,7 +46,7 @@ export function Header({
         </Link>
 
         {showSearch && (
-          <div className="flex flex-1 justify-center mx-8">
+          <div className="hidden md:flex flex-1 justify-center mx-8">
             <div className="flex w-full max-w-lg">
               <Input
                 type="search"
@@ -99,15 +99,6 @@ export function Header({
                     </div>
 
                     <div className="p-1">
-                      {/* <Link
-                        href="/profile"
-                        className="flex w-full items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
-                        onClick={() => setShowUserMenu(false)}
-                      >
-                        <User className="w-4 h-4 mr-2 text-gray-500" />
-                        Meu Perfil
-                      </Link> */}
-
                       <button
                         onClick={() => signOut({ callbackUrl: "/" })} // Redireciona para home ao sair
                         className="flex w-full items-center px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors mt-1"

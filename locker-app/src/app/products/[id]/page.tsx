@@ -94,7 +94,7 @@ export default async function ProductPage({ params }: PageProps) {
   return (
     <div className="bg-[#FAFAFA] min-h-screen font-sans text-[#0D0D0D]">
       {/* Breadcrumbs Container */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="container mx-auto">
         <Breadcrumbs items={breadcrumbItems} />
       </div>
 

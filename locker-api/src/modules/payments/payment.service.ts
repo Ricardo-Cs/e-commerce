@@ -14,6 +14,7 @@ export class PaymentService {
         const validatedInput = checkoutSchema.parse(input);
         const { items, total, userId } = validatedInput;
 
+        // Criar pedido no banco local
         const orderItems = items.map(item => ({
             product_id_fk: item.id,
             quantity: item.quantity,
@@ -26,27 +27,21 @@ export class PaymentService {
             items: orderItems,
         });
 
-        // --- Orders API payload para sandbox Pix ---
+        // Payload compatível com Pix sandbox
         const payload = {
             external_reference: String(newOrder.id),
-            type: "online",
             notification_url: `${env.API_URL}/payments/webhook`,
             payer: {
-                email: "test@testuser.com",  // qualquer email fictício
-                first_name: "APRO",          // força aprovação no sandbox
-                last_name: "BUYER"
+                first_name: "APRO",           // obrigatório para sandbox
+                last_name: "BUYER",
+                email: "test_user@example.com" // email fictício
             },
-            transactions: {
-                payments: [
-                    {
-                        amount: total,
-                        payment_method: {
-                            id: "pix",
-                            type: "bank_transfer"
-                        }
-                    }
-                ]
-            }
+            payments: [
+                {
+                    payment_type_id: "pix",
+                    transaction_amount: total
+                }
+            ]
         };
 
         try {
@@ -67,15 +62,14 @@ export class PaymentService {
                 throw new AppError(data.message || "Falha ao gerar Pix", 400);
             }
 
-            const charge = data.charges[0];
-            const payment = charge.payment_method;
+            const payment = data.payments[0];
 
             await orderRepo.createPayment(newOrder.id, "PIX", data.status);
 
             return {
-                qrCode: payment.qr_code,
-                qrCodeBase64: payment.qr_code_base64,
-                ticketUrl: payment.ticket_url,
+                qrCode: payment.point_of_interaction?.transaction_data?.qr_code,
+                qrCodeBase64: payment.point_of_interaction?.transaction_data?.qr_code_base64,
+                ticketUrl: payment.point_of_interaction?.transaction_data?.ticket_url,
                 orderId: newOrder.id,
                 mpOrderId: data.id
             };
@@ -86,7 +80,6 @@ export class PaymentService {
         }
     }
 
-    // ------ Webhook ------
     async processWebhook(body: any) {
         const orderId = body.data?.id;
         if (!orderId) return;

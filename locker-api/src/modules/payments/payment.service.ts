@@ -1,5 +1,3 @@
-// locker-api/src/modules/payments/payment.service.ts
-
 import { AppError } from "../../errors/AppError";
 import { env } from "../../config/env";
 import { OrderRepository } from "../orders/order.repository";
@@ -14,7 +12,7 @@ const MP_ORDERS_URL = "https://api.mercadopago.com/v1/orders";
 export class PaymentService {
     async createPixPayment(input: unknown & { userId: number }) {
         const validatedInput = checkoutSchema.parse(input);
-        const { items, total, userEmail, userName, userId } = validatedInput;
+        const { items, total, userId } = validatedInput;
 
         const orderItems = items.map(item => ({
             product_id_fk: item.id,
@@ -28,23 +26,24 @@ export class PaymentService {
             items: orderItems,
         });
 
-        // --- Orders API payload ---
+        // --- Orders API payload para sandbox Pix ---
         const payload = {
             external_reference: String(newOrder.id),
-            type: "payment",
+            type: "online",
             notification_url: `${env.API_URL}/payments/webhook`,
-
             payer: {
-                email: userEmail,
-                first_name: userName.split(" ")[0],
-                last_name: userName.split(" ").slice(1).join(" ") || "Cliente"
+                email: "test@testuser.com",  // qualquer email fictício
+                first_name: "APRO",          // força aprovação no sandbox
+                last_name: "BUYER"
             },
-
             transactions: {
                 payments: [
                     {
-                        payment_method_id: "pix",
-                        transaction_amount: total
+                        amount: total,
+                        payment_method: {
+                            id: "pix",
+                            type: "bank_transfer"
+                        }
                     }
                 ]
             }
@@ -68,7 +67,6 @@ export class PaymentService {
                 throw new AppError(data.message || "Falha ao gerar Pix", 400);
             }
 
-            // Dados PIX ficam dentro de `charges[0].payment_method`
             const charge = data.charges[0];
             const payment = charge.payment_method;
 

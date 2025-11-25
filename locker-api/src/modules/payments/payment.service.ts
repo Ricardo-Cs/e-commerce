@@ -1,3 +1,4 @@
+// locker-api/src/modules/payments/payment.service.ts
 import { AppError } from "../../errors/AppError";
 import { env } from "../../config/env";
 import { OrderRepository } from "../orders/order.repository";
@@ -7,14 +8,13 @@ import { randomUUID } from "crypto";
 type Decimal = any;
 
 const orderRepo = new OrderRepository();
-const MP_ORDERS_URL = "https://api.mercadopago.com/v1/orders";
+const MP_PAYMENTS_URL = "https://api.mercadopago.com/v1/payments";
 
 export class PaymentService {
     async createPixPayment(input: unknown & { userId: number }) {
         const validatedInput = checkoutSchema.parse(input);
         const { items, total, userId } = validatedInput;
 
-        // Criar pedido no banco local
         const orderItems = items.map(item => ({
             product_id_fk: item.id,
             quantity: item.quantity,
@@ -27,32 +27,28 @@ export class PaymentService {
             items: orderItems,
         });
 
-        // Payload compatível com Pix sandbox
+        // --- Payload Pix sandbox ---
         const payload = {
+            transaction_amount: total,
+            payment_method_id: "pix",
+            payer: {
+                email: "test_user@example.com",
+                first_name: "APRO",
+                last_name: "BUYER",
+            },
             external_reference: String(newOrder.id),
             notification_url: `${env.API_URL}/payments/webhook`,
-            payer: {
-                first_name: "APRO",           // obrigatório para sandbox
-                last_name: "BUYER",
-                email: "test_user@example.com" // email fictício
-            },
-            payments: [
-                {
-                    payment_type_id: "pix",
-                    transaction_amount: total
-                }
-            ]
         };
 
         try {
-            const response = await fetch(MP_ORDERS_URL, {
+            const response = await fetch(MP_PAYMENTS_URL, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${env.MERCADO_PAGO_ACCESS_TOKEN}`,
-                    "X-Idempotency-Key": randomUUID()
+                    "X-Idempotency-Key": randomUUID(),
                 },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
             });
 
             const data = await response.json() as any;
@@ -62,46 +58,39 @@ export class PaymentService {
                 throw new AppError(data.message || "Falha ao gerar Pix", 400);
             }
 
-            const payment = data.payments[0];
-
             await orderRepo.createPayment(newOrder.id, "PIX", data.status);
 
+            const transactionData = data.point_of_interaction.transaction_data;
+
             return {
-                qrCode: payment.point_of_interaction?.transaction_data?.qr_code,
-                qrCodeBase64: payment.point_of_interaction?.transaction_data?.qr_code_base64,
-                ticketUrl: payment.point_of_interaction?.transaction_data?.ticket_url,
+                qrCode: transactionData.qr_code,
+                qrCodeBase64: transactionData.qr_code_base64,
+                paymentId: data.id,
                 orderId: newOrder.id,
-                mpOrderId: data.id
             };
 
         } catch (error) {
-            console.error("Erro MP Orders:", error);
+            console.error("Erro MP Pix:", error);
             throw new AppError("Erro ao processar pagamento externo", 500);
         }
     }
 
     async processWebhook(body: any) {
-        const orderId = body.data?.id;
-        if (!orderId) return;
+        const paymentId = body.id || body["data.id"];
+        if (!paymentId || body.topic !== "payment") return;
 
-        const response = await fetch(`${MP_ORDERS_URL}/${orderId}`, {
+        const response = await fetch(`${MP_PAYMENTS_URL}/${paymentId}`, {
             method: "GET",
-            headers: {
-                Authorization: `Bearer ${env.MERCADO_PAGO_ACCESS_TOKEN}`,
-            },
+            headers: { Authorization: `Bearer ${env.MERCADO_PAGO_ACCESS_TOKEN}` },
         });
 
         const data = await response.json() as any;
-
-        const externalRef = Number(data.external_reference);
+        const orderId = Number(data.external_reference);
         const status = data.status?.toUpperCase();
 
-        if (externalRef && status) {
-            await orderRepo.updateStatus(externalRef, status);
-
-            if (status === "APPROVED") {
-                console.log(`Pedido ${externalRef} aprovado.`);
-            }
+        if (orderId && status) {
+            await orderRepo.updateStatus(orderId, status);
+            if (status === "APPROVED") console.log(`Pedido ${orderId} aprovado.`);
         }
     }
 }

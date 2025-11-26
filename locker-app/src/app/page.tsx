@@ -72,7 +72,7 @@ export default function HomePage() {
             {/* Imagem */}
             <div className="w-full md:w-1/2 relative aspect-4/3 md:aspect-square lg:aspect-4/3">
               <Image
-                src="https://placehold.co/800x600/505050/FFFFFF?text=Conceito+Eclat"
+                src="/sobre-nos-home.jpg"
                 alt="Visão conceitual da marca Éclat"
                 fill
                 className="rounded-lg shadow-2xl object-cover grayscale hover:grayscale-0 transition duration-700"

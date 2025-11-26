@@ -18,6 +18,11 @@ interface OrderStatusResponse {
     status: "PENDING" | "APPROVED" | "CANCELED" | "EXPIRED";
 }
 
+export const authApi = {
+    register: (data: { name: string; email: string; password: string }) =>
+        api.post("/auth/register", data),
+}
+
 export const usersApi = {
     list: () => api.get("/users"),
     create: (data: any) => api.post("/users", data),

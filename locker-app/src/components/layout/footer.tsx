@@ -17,7 +17,7 @@ export function Footer() {
         </Link>
 
         <div className="flex flex-wrap justify-center gap-6 ml-4">
-          <Link href="/">Sobre</Link>
+          <Link href="/about">Sobre</Link>
           <Link href="/">Contato</Link>
           <Link href="/">Privacidade</Link>
           <Link href="/">Termos</Link>

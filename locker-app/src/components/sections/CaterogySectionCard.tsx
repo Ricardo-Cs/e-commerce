@@ -1,5 +1,6 @@
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 interface CategorySectionCardProps {
   title: string;
@@ -10,13 +11,16 @@ interface CategorySectionCardProps {
 export function CategorySectionCard({ title, description, image }: CategorySectionCardProps) {
   return (
     <Card className="relative group overflow-hidden w-full rounded-xl shadow-lg hover:shadow-2xl transition duration-500 p-0 border-none">
-      {/* Container da Imagem */}
-      <div
-        className="relative h-96 w-full bg-secondary flex items-center justify-center bg-cover bg-center"
-        style={{ backgroundImage: `url('${image}')` }}
-      >
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-primary bg-opacity-30 group-hover:bg-opacity-50 transition duration-500 flex items-end justify-center">
+      <div className="relative h-96 w-full bg-secondary flex items-center justify-center">
+        <Image
+          src={image}
+          alt={`Imagem da Categoria ${title}`}
+          fill
+          priority
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="object-cover transition duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 z-10 bg-opacity-30 group-hover:bg-opacity-50 transition duration-500 flex items-end justify-center">
           <CardContent className="p-6 text-center w-full">
             <CardTitle className="text-2xl font-serif text-white mb-2 transform translate-y-full group-hover:translate-y-0 transition duration-500 delay-100">
               {title}

@@ -40,7 +40,7 @@ export function Header({
 
   return (
     <>
-      <header className="container flex items-center mx-auto justify-between py-4 bg-white relative z-50">
+      <header className="container flex items-center mx-auto justify-between py-4 bg-white relative z-50 px-3 sm:px-0">
         <Link href="/" className="text-4xl font-bold font-logo">
           Locker
         </Link>

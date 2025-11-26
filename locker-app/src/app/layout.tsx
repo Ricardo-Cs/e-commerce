@@ -26,7 +26,7 @@ export default function RootLayout({
               <Header />
             </div>
 
-            <main className="flex-1 mx-auto w-full">{children}</main>
+            <main className="flex-1 mx-auto w-full px-3 sm:px-0">{children}</main>
 
             <Toaster richColors closeButton position="top-right" />
             <div className="container mx-auto w-full px-6 py-8">

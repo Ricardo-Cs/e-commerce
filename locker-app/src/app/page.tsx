@@ -15,8 +15,7 @@ export default function HomePage() {
         id="home"
         className="relative min-h-[85vh] flex items-center justify-center bg-gray-900 overflow-hidden w-full"
       >
-        {/* Imagem de Fundo (Overlay)
-        <div className="absolute inset-0 opacity-60 bg-cover bg-center" /> */}
+        <div className="absolute inset-0 opacity-60 bg-[url('/hero-section.png')] bg-cover bg-center" />
 
         {/* Overlay Gradiente para leitura */}
         <div className="absolute inset-0 bg-black/40" />
@@ -48,21 +47,9 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
-          <CategorySectionCard
-            title="Masculina"
-            description="Alfaiataria e cortes precisos."
-            image="https://placehold.co/600x800/2a2a2a/FFFFFF?text=Masculino"
-          />
-          <CategorySectionCard
-            title="Feminina"
-            description="Elegância casual para o dia a dia."
-            image="https://placehold.co/600x800/3a3a3a/FFFFFF?text=Feminino"
-          />
-          <CategorySectionCard
-            title="Acessórios"
-            description="Detalhes que fazem a diferença."
-            image="https://placehold.co/600x800/4a4a4a/FFFFFF?text=Acess%C3%B3rios"
-          />
+          <CategorySectionCard title="Masculina" description="Alfaiataria e cortes precisos." image="/men.png" />
+          <CategorySectionCard title="Feminina" description="Elegância casual para o dia a dia." image="/women.png" />
+          <CategorySectionCard title="Acessórios" description="Detalhes que fazem a diferença." image="/shoes.png" />
         </div>
       </section>
 

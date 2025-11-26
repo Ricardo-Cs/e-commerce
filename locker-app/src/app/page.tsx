@@ -15,8 +15,8 @@ export default function HomePage() {
         id="home"
         className="relative min-h-[85vh] flex items-center justify-center bg-gray-900 overflow-hidden w-full"
       >
-        {/* Imagem de Fundo (Overlay) */}
-        <div className="absolute inset-0 opacity-60 bg-[url('https://placehold.co/1920x1080/202020/FFFFFF?text=Background')] bg-cover bg-center" />
+        {/* Imagem de Fundo (Overlay)
+        <div className="absolute inset-0 opacity-60 bg-cover bg-center" /> */}
 
         {/* Overlay Gradiente para leitura */}
         <div className="absolute inset-0 bg-black/40" />

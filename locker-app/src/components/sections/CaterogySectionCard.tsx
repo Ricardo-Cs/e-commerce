@@ -27,18 +27,21 @@ export function CategorySectionCard({ title, description, image }: CategorySecti
           sizes="(max-width: 768px) 100vw, 33vw"
           className="object-cover transition duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 z-10 bg-opacity-30 group-hover:bg-opacity-50 transition duration-500 flex items-end justify-center">
+
+        <div className="absolute inset-0 z-10 bg-black/40 group-hover:bg-black/50 transition duration-500 flex items-end justify-center">
           <CardContent className="p-6 text-center w-full">
-            <CardTitle className="text-2xl font-serif text-white mb-2 transform translate-y-full group-hover:translate-y-0 transition duration-500 delay-100">
+            <CardTitle className="text-2xl font-serif text-white mb-2 transform translate-y-0 md:translate-y-full md:group-hover:translate-y-0 transition duration-500 delay-100">
               {title}
             </CardTitle>
-            <CardDescription className="text-sm text-white/80 opacity-0 group-hover:opacity-100 transition duration-500 delay-200">
+
+            <CardDescription className="text-sm text-white/90 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition duration-500 delay-200">
               {description}
             </CardDescription>
+
             <Button
               asChild
               variant="outline"
-              className="mt-4 text-sm text-white border-white bg-transparent hover:bg-white/20 px-4 py-1 rounded-full opacity-0 group-hover:opacity-100 transition duration-500 delay-300"
+              className="mt-4 text-sm text-white border-white bg-white/20 hover:bg-white/40 md:bg-transparent md:hover:bg-white/20 px-4 py-1 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition duration-500 delay-300"
             >
               <Link href={`/products?category=${categoryMap[title]}`}>Ver Coleção</Link>
             </Button>

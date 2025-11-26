@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown, Filter, X, Check, Loader2 } from "lucide-react";
@@ -32,13 +32,13 @@ type SortOrder = "newest" | "price-asc" | "price-desc";
 
 const PRODUCTS_PER_PAGE = 9;
 
-export default function ProductsPage() {
+// 1. Renomeamos o componente principal para ProductsContent e removemos o 'export default'
+function ProductsContent() {
   const [products, setProducts] = useState<Product[]>([]);
   const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
 
   const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined);
-
   const [priceInput, setPriceInput] = useState<string>("");
 
   const [totalProducts, setTotalProducts] = useState(0);
@@ -51,7 +51,7 @@ export default function ProductsPage() {
 
   const searchParams = useSearchParams();
 
-  // Utilitárias
+  // --- Funções Utilitárias ---
   const toggleCategory = (id: number) => {
     setSelectedCategories((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]));
   };
@@ -73,7 +73,7 @@ export default function ProductsPage() {
       setSelectedCategories([numeric]);
       setCurrentPage(1);
     }
-  }, []);
+  }, [searchParams]); // Adicionado searchParams nas dependências
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -163,7 +163,7 @@ export default function ProductsPage() {
     }
 
     fetchProducts();
-  }, [currentPage, selectedCategories, maxPrice]);
+  }, [currentPage, selectedCategories, maxPrice]); // Removido sortOrder daqui para evitar loop duplo, já é tratado no próximo useEffect
 
   useEffect(() => {
     if (products.length > 0) {
@@ -224,7 +224,6 @@ export default function ProductsPage() {
 
   return (
     <div className="bg-[#FAFAFA] min-h-screen font-sans text-[#0D0D0D]">
-      {/* Banner Título */}
       <div className="bg-[#E5E5E5] py-12 md:py-16 text-center">
         <h1 className="text-4xl md:text-5xl font-serif text-[#0D0D0D] mb-2">Nossa Coleção de Roupas</h1>
         <p className="text-gray-600 text-sm uppercase tracking-widest">
@@ -448,5 +447,19 @@ export default function ProductsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center min-h-screen bg-[#FAFAFA]">
+          <Loader2 className="w-10 h-10 animate-spin text-gray-400" />
+        </div>
+      }
+    >
+      <ProductsContent />
+    </Suspense>
   );
 }

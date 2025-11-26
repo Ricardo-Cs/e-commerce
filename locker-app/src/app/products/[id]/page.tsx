@@ -135,7 +135,6 @@ export default async function ProductPage({ params }: PageProps) {
               <ProductPayButton product={product} />
             </div>
 
-            {/* Acordeões de Informações Extras (HTML nativo <details>) */}
             <div className="border-t border-gray-200">
               <div className="border-b border-gray-200 py-4">
                 <details className="group">

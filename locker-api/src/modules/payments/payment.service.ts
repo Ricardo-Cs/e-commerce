@@ -76,21 +76,35 @@ export class PaymentService {
     }
 
     async processWebhook(body: any) {
-        const paymentId = body.id || body["data.id"];
-        if (!paymentId || body.topic !== "payment") return;
+        const paymentId = body.data?.id || body.id;
+        const actionType = body.type || body.topic;
 
-        const response = await fetch(`${MP_PAYMENTS_URL}/${paymentId}`, {
-            method: "GET",
-            headers: { Authorization: `Bearer ${env.MERCADO_PAGO_ACCESS_TOKEN}` },
-        });
+        if (!paymentId || actionType !== "payment") {
+            return;
+        }
 
-        const data = await response.json() as any;
-        const orderId = Number(data.external_reference);
-        const status = data.status?.toUpperCase();
+        try {
+            const response = await fetch(`${MP_PAYMENTS_URL}/${paymentId}`, {
+                method: "GET",
+                headers: { Authorization: `Bearer ${env.MERCADO_PAGO_ACCESS_TOKEN}` },
+            });
 
-        if (orderId && status) {
-            await orderRepo.updateStatus(orderId, status);
-            if (status === "APPROVED") console.log(`Pedido ${orderId} aprovado.`);
+            if (!response.ok) {
+                console.error(`Erro ao buscar pagamento ${paymentId} no MP`);
+                return;
+            }
+
+            const data = await response.json() as any;
+
+            const orderId = Number(data.external_reference);
+            const status = data.status?.toUpperCase();
+
+            if (orderId && status) {
+                await orderRepo.updateStatus(orderId, status);
+                console.log(`Webhook: Pedido #${orderId} atualizado para ${status}`);
+            }
+        } catch (error) {
+            console.error("Erro ao processar webhook:", error);
         }
     }
 }

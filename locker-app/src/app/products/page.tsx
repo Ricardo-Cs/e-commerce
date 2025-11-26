@@ -267,7 +267,7 @@ function ProductsContent() {
             <div className="border-b border-gray-200 pb-6">
               <h3 className="font-serif text-lg font-medium mb-4">Categorias</h3>
               <ul className="space-y-3 text-sm text-gray-600">
-                {["Masculino", "Feminino", "Acessórios"].map((cat, i) => (
+                {["Masculino", "Feminino", "Calçado"].map((cat, i) => (
                   <li key={i}>
                     <label className="flex items-center cursor-pointer group">
                       <div className="relative flex items-center">
@@ -426,7 +426,7 @@ function ProductsContent() {
               <div>
                 <h3 className="font-medium text-gray-900 mb-3 uppercase text-xs tracking-wider">Categorias</h3>
                 <div className="space-y-3">
-                  {["Feminino", "Masculino", "Acessórios"].map((cat) => (
+                  {["Feminino", "Masculino", "Calçado"].map((cat) => (
                     <label key={cat} className="flex items-center">
                       <input type="checkbox" className="mr-3 h-4 w-4 accent-[#0D0D0D] border-gray-300 rounded" />
                       <span className="text-sm text-gray-600">{cat}</span>

@@ -63,4 +63,14 @@ export class OrderController {
             next(error);
         }
     }
+
+    async listUserOrders(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userId = (req as any).user.id;
+            const orders = await repo.findByUserId(userId);
+            return res.json(orders);
+        } catch (error) {
+            next(error);
+        }
+    }
 }

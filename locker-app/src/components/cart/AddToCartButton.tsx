@@ -4,7 +4,6 @@ import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { toast } from "sonner";
-import { formatCurrency } from "@/lib/utils";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { Key } from "react";
 
@@ -18,9 +17,10 @@ interface ProductData {
 interface AddToCartButtonProps {
   product: ProductData;
   quantity?: number;
+  disabled?: boolean;
 }
 
-export function AddToCartButton({ product, quantity = 1 }: AddToCartButtonProps) {
+export function AddToCartButton({ product, quantity = 1, disabled = false }: AddToCartButtonProps) {
   const { addItem } = useCart();
 
   const handleAddToCart = () => {
@@ -51,6 +51,7 @@ export function AddToCartButton({ product, quantity = 1 }: AddToCartButtonProps)
   return (
     <Button
       onClick={handleAddToCart}
+      disabled={disabled}
       className="flex-1 py-4 px-6 rounded-full font-semibold tracking-wide shadow-lg flex items-center justify-center gap-2 group"
     >
       <span>Adicionar ao Carrinho</span>

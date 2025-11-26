@@ -19,4 +19,8 @@ router.put("/:orderId/status", authMiddleware, isAdmin, (req, res, next) => {
     orderController.updateStatusManually(req, res, next);
 });
 
+router.get("/me", authMiddleware, (req, res, next) => {
+    orderController.listUserOrders(req, res, next).catch(next);
+});
+
 export default router;

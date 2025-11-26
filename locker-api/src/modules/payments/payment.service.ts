@@ -37,7 +37,7 @@ export class PaymentService {
                 last_name: "BUYER",
             },
             external_reference: String(newOrder.id),
-            notification_url: `${env.API_URL}/payments/webhook`,
+            // notification_url: `${env.API_URL}/payments/webhook`,
         };
 
         try {

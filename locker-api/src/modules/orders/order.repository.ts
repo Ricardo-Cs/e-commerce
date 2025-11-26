@@ -66,4 +66,26 @@ export class OrderRepository {
             select: { status: true }
         });
     }
+
+    async findByUserId(userId: number) {
+        return prisma.order.findMany({
+            where: { user_id_fk: userId },
+            include: {
+                items: {
+                    include: {
+                        product: {
+                            select: {
+                                name: true,
+                                images: {
+                                    select: { url: true },
+                                    take: 1
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            orderBy: { createdAt: "desc" }
+        });
+    }
 }

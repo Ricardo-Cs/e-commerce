@@ -1,10 +1,9 @@
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import { Key } from "react";
 import { Breadcrumbs } from "../../../components/layout/breadCumbs";
-import Image from "next/image";
 import ProductGallery from "../../../components/layout/productGallery";
-import ProductPayButton from "../../../components/payment/ProductPayButton";
-import { AddToCartButton } from "../../../components/cart/AddToCartButton";
+
+import { ProductActionsClient } from "./ProductActionsClient";
 
 interface CategoryData {
   id: number;
@@ -67,7 +66,6 @@ function getBreadcrumbItems(productCategories: ProductCategoryEntry[], productNa
   return [{ label: "Home", href: "/" }, ...crumbs, { label: productName }];
 }
 
-// Formatação de moeda
 const formatCurrency = (value: string | number) => {
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
@@ -75,11 +73,9 @@ const formatCurrency = (value: string | number) => {
   }).format(Number(value));
 };
 
-// --- COMPONENTE DA PÁGINA ---
 export default async function ProductPage({ params }: PageProps) {
   const { id } = await params;
 
-  // Fetch de dados
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`, {
     cache: "no-store",
   });
@@ -93,20 +89,15 @@ export default async function ProductPage({ params }: PageProps) {
 
   return (
     <div className="bg-[#FAFAFA] min-h-screen font-sans text-[#0D0D0D]">
-      {/* Breadcrumbs Container */}
       <div className="container mx-auto">
         <Breadcrumbs items={breadcrumbItems} />
       </div>
 
-      {/* Seção Principal do Produto */}
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-24">
         <div className="flex flex-col lg:flex-row gap-12">
-          {/* Galeria de Imagens (Client Component) */}
           <ProductGallery images={product.images} productName={product.name} />
 
-          {/* Detalhes do Produto (Direita) */}
           <div className="lg:w-2/5 flex flex-col sticky top-24 h-fit">
-            {/* Título e Preço */}
             <div className="border-b border-gray-200 pb-6 mb-6">
               <h1 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-2">{product.name}</h1>
               <p className="text-sm text-gray-500 mb-4">Ref: PRD-{product.id.toString().padStart(4, "0")}</p>
@@ -114,7 +105,6 @@ export default async function ProductPage({ params }: PageProps) {
               <div className="flex items-center justify-between">
                 <p className="text-2xl font-semibold text-primary">{formatCurrency(product.price)}</p>
 
-                {/* Mock de Avaliação (Dados não presentes na API) */}
                 <div className="flex items-center text-accent text-sm">
                   <span>★★★★★</span>
                   <span className="ml-2 text-gray-500 underline cursor-pointer">(12 Avaliações)</span>
@@ -126,14 +116,9 @@ export default async function ProductPage({ params }: PageProps) {
               </p>
             </div>
 
-            {/* Descrição */}
             <p className="text-gray-600 mb-8 leading-relaxed">{product.description}</p>
 
-            {/* Botões de Ação */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <AddToCartButton product={product} />
-              <ProductPayButton product={product} />
-            </div>
+            <ProductActionsClient product={product} />
 
             <div className="border-t border-gray-200">
               <div className="border-b border-gray-200 py-4">

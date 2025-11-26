@@ -88,7 +88,6 @@ export function Header({
                   <ChevronDown className={`w-3 h-3 transition-transform ${showUserMenu ? "rotate-180" : ""}`} />
                 </Button>
 
-                {/* Menu Dropdown */}
                 {showUserMenu && (
                   <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-200 origin-top-right">
                     <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50">
@@ -99,8 +98,17 @@ export function Header({
                     </div>
 
                     <div className="p-1">
+                      <Link
+                        href="/profile"
+                        className="flex w-full items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        <User className="w-4 h-4 mr-2" />
+                        Meu Perfil
+                      </Link>
+
                       <button
-                        onClick={() => signOut({ callbackUrl: "/" })} // Redireciona para home ao sair
+                        onClick={() => signOut({ callbackUrl: "/" })}
                         className="flex w-full items-center px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors mt-1"
                       >
                         <LogOut className="w-4 h-4 mr-2" />

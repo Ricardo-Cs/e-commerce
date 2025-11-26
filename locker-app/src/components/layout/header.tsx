@@ -45,21 +45,6 @@ export function Header({
           Locker
         </Link>
 
-        {showSearch && (
-          <div className="hidden md:flex flex-1 justify-center mx-8">
-            <div className="flex w-full max-w-lg">
-              <Input
-                type="search"
-                placeholder="Buscar produtos..."
-                className="rounded-r-none bg-white border-gray-400"
-              />
-              <Button className="rounded-l-none bg-primary" size="icon">
-                <Search className="w-4 h-4 text-white" />
-              </Button>
-            </div>
-          </div>
-        )}
-
         <div className="flex items-center gap-3">
           {showCart && (
             <div className="relative">

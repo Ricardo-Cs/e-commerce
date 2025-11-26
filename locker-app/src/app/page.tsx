@@ -49,7 +49,7 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
           <CategorySectionCard title="Masculina" description="Alfaiataria e cortes precisos." image="/men.png" />
           <CategorySectionCard title="Feminina" description="Elegância casual para o dia a dia." image="/women.png" />
-          <CategorySectionCard title="Acessórios" description="Detalhes que fazem a diferença." image="/shoes.png" />
+          <CategorySectionCard title="Calçados" description="Conforto e elegância." image="/shoes.png" />
         </div>
       </section>
 

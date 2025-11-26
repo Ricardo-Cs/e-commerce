@@ -1,12 +1,19 @@
 import { Card, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 interface CategorySectionCardProps {
   title: string;
   description: string;
   image: string;
 }
+
+const categoryMap: Record<string, number> = {
+  Masculina: 1,
+  Feminina: 2,
+  Calçados: 3,
+};
 
 export function CategorySectionCard({ title, description, image }: CategorySectionCardProps) {
   return (
@@ -29,10 +36,11 @@ export function CategorySectionCard({ title, description, image }: CategorySecti
               {description}
             </CardDescription>
             <Button
+              asChild
               variant="outline"
               className="mt-4 text-sm text-white border-white bg-transparent hover:bg-white/20 px-4 py-1 rounded-full opacity-0 group-hover:opacity-100 transition duration-500 delay-300"
             >
-              Ver Coleção
+              <Link href={`/products?category=${categoryMap[title]}`}>Ver Coleção</Link>
             </Button>
           </CardContent>
         </div>

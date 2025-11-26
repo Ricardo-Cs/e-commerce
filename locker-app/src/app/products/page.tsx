@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ChevronDown, Filter, X, Check, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { productsApi } from "@/lib/api/endpoints";
+import { useSearchParams } from "next/navigation";
 
 interface Product {
   id: number;
@@ -48,6 +49,8 @@ export default function ProductsPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
 
+  const searchParams = useSearchParams();
+
   // Utilitárias
   const toggleCategory = (id: number) => {
     setSelectedCategories((prev) => (prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]));
@@ -59,6 +62,18 @@ export default function ProductsPage() {
       currency: "BRL",
     }).format(Number(value));
   };
+
+  useEffect(() => {
+    const cat = searchParams.get("category");
+    if (!cat) return;
+
+    const numeric = Number(cat);
+
+    if (!isNaN(numeric)) {
+      setSelectedCategories([numeric]);
+      setCurrentPage(1);
+    }
+  }, []);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {

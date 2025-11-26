@@ -37,7 +37,7 @@ export class PaymentService {
                 last_name: "BUYER",
             },
             external_reference: String(newOrder.id),
-            // notification_url: `${env.API_URL}/payments/webhook`,
+            notification_url: `${env.API_URL}/payments/webhook`,
         };
 
         try {
@@ -77,6 +77,7 @@ export class PaymentService {
 
     async processWebhook(body: any) {
         const paymentId = body.data?.id || body.id;
+
         const actionType = body.type || body.topic;
 
         if (!paymentId || actionType !== "payment") {

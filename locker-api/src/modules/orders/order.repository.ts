@@ -16,6 +16,13 @@ export class OrderRepository {
                     select: {
                         name: true,
                     }
+                },
+                items: {
+                    include: {
+                        product: {
+                            select: { name: true }
+                        }
+                    }
                 }
             },
             orderBy: {

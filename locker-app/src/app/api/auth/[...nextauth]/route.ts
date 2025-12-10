@@ -37,11 +37,11 @@ const handler = NextAuth({
                         role: decoded.isAdmin ? "admin" : "user",
                         email: credentials?.email,
                         accessToken: data.token,
-                        name: data.token
+                        name: decoded.name
                     }
                 }
 
-                return null
+                return null;
             }
         })
     ],

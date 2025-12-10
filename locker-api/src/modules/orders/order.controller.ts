@@ -56,6 +56,7 @@ export class OrderController {
                 total: Number(order.total),
                 status: order.status,
                 createdAt: order.createdAt,
+                items: order.items
             }));
 
             return res.json(formattedOrders);

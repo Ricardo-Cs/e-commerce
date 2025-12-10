@@ -67,3 +67,5 @@ export const ordersApi = {
 
     listAllOrders: () => api.get("/orders"),
 };
+
+export { api }

@@ -74,12 +74,13 @@ export default function HomePage() {
 
               <div className="space-y-6 text-gray-400 font-light text-base md:text-lg leading-relaxed">
                 <p>
-                  A Locker nasceu da convicção de que a verdadeira elegância reside na simplicidade e na qualidade. Cada
-                  peça é desenhada para transcender as tendências passageiras, oferecendo um guarda-roupa atemporal.
+                  A Locker nasceu da convicção de que a verdadeira elegância não precisa custar caro. Criamos peças
+                  atemporais que transcendem tendências, focando naquilo que realmente importa: caimento perfeito e
+                  durabilidade.
                 </p>
                 <p>
-                  Utilizamos apenas materiais sustentáveis e de alta performance, garantindo não apenas beleza, mas
-                  também durabilidade e responsabilidade.
+                  Nossa filosofia é simples: oferecer o melhor custo-benefício do mercado premium. Você merece vestir-se
+                  com confiança e credibilidade, sem comprometer seu orçamento.
                 </p>
               </div>
 

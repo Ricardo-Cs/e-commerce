@@ -44,7 +44,7 @@ export default function AboutPage() {
           </div>
 
           <div className="w-full md:w-1/2 space-y-6">
-            <h2 className="text-3xl md:text-4xl font-serif mb-4 text-[#0D0D0D]">Por que nascemos?</h2>
+            <h2 className="text-3xl md:text-4xl font-serif mb-4 text-[#0D0D0D]">Como surgimos</h2>
             <div className="w-20 h-1 bg-primary mb-6"></div>
             <p className="text-gray-600 leading-relaxed text-lg">
               A Locker foi fundada em 2024 a partir de um questionamento simples: por que é tão difícil encontrar roupas
@@ -77,8 +77,8 @@ export default function AboutPage() {
               </div>
               <h3 className="text-xl font-serif font-bold mb-3">Nossa Missão</h3>
               <p className="text-gray-600 leading-relaxed">
-                Provar que é possível vestir-se com distinção todos os dias. Nossa missão é entregar peças versáteis e
-                duráveis, garantindo que cada compra seja um investimento na sua imagem pessoal.
+                Entregar sofisticação e durabilidade para o dia a dia, garantindo que cada peça seja um investimento
+                inteligente na sua imagem.
               </p>
             </div>
 
@@ -132,7 +132,7 @@ export default function AboutPage() {
           <p className="text-gray-600 text-lg font-light leading-relaxed">
             Em um mundo de tendências passageiras, escolhemos a permanência. Nossas roupas são feitas para resistir a
             estações e lavagens. Ao escolher a Locker, você não está apenas comprando uma roupa, está construindo um
-            guarda-roupa funcional que valoriza o seu dinheiro a longo prazo.
+            armário funcional que valoriza o seu dinheiro a longo prazo.
           </p>
 
           <div className="pt-8">

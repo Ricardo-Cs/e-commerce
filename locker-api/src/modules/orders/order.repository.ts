@@ -30,22 +30,50 @@ export class OrderRepository {
             }
         });
     }
+
     async createOrderAndItems(data: CreateOrderInput) {
-        return prisma.order.create({
-            data: {
-                user_id_fk: data.user_id_fk,
-                total: data.total,
-                status: "PENDING",
-                items: {
-                    createMany: {
-                        data: data.items.map(item => ({
-                            product_id_fk: item.product_id_fk,
-                            quantity: item.quantity,
-                            price: item.price,
-                        }))
-                    }
+        // Usamos $transaction para garantir que tudo aconteça ou nada aconteça
+        return prisma.$transaction(async (tx) => {
+
+            // 1. Verificar se há estoque para todos os itens (Opcional, mas recomendado)
+            for (const item of data.items) {
+                const product = await tx.product.findUnique({ where: { id: item.product_id_fk } });
+                if (!product || product.stock < item.quantity) {
+                    throw new Error(`Estoque insuficiente para o produto ID ${item.product_id_fk}`);
                 }
             }
+
+            // 2. Criar o Pedido
+            const order = await tx.order.create({
+                data: {
+                    user_id_fk: data.user_id_fk,
+                    total: data.total,
+                    status: "PENDING",
+                    items: {
+                        createMany: {
+                            data: data.items.map(item => ({
+                                product_id_fk: item.product_id_fk,
+                                quantity: item.quantity,
+                                price: item.price,
+                            }))
+                        }
+                    }
+                }
+            });
+
+            // 3. Deduzir o Estoque dos Produtos
+            for (const item of data.items) {
+                await tx.product.update({
+                    where: { id: item.product_id_fk },
+                    data: {
+                        stock: {
+                            decrement: item.quantity // Função atômica do Prisma para subtrair
+                        }
+                    }
+                });
+            }
+
+            return order;
         });
     }
 
